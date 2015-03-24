@@ -1,0 +1,21 @@
+body
+{
+	margin:0;
+	padding:0;
+}
+
+#drawCanvas{
+	border:solid 2px #333;
+	position:absolute;
+	left:380px;
+	top:200px;
+}
+
+
+
+#canvas{
+	border:solid 2px #333;
+	position:absolute;
+	left:800px;
+	top:200px;
+}
