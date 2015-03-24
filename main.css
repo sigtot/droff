@@ -16,6 +16,6 @@ body
 #canvas{
 	border:solid 2px #333;
 	position:absolute;
-	left:800px;
-	top:200px;
+	left:calc(50% - 400px);
+	top:50px;
 }

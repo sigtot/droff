@@ -1,29 +1,85 @@
-$("#drawCanvas").click(function(evt){
-	var x = evt.pageX - $('#drawCanvas').offset().left
-	var y = evt.pageY - $('#drawCanvas').offset().top
-	//alert(x + " " + y);
-	$("#drawCanvas").append("<polyline points='" + x + "," + y + " 50,100 60,110' fill='none' stroke='red' stroke-width='3' />");
-	$("#svgContainer").html($("#svgContainer").html());
-});
-
+// Define the canvas element
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 
-context.beginPath();
-      context.moveTo(100, 20);
+// Define initial settings
+var bgColor = "white";
+var strokeColor = "black";
+var strokeWidth = 5;
 
-      // line 1
-      context.lineTo(200, 160);
+// Set initial settings
+context.fillStyle = bgColor;
+context.strokeStyle = strokeColor;
+context.lineWidth = strokeWidth;
+context.lineJoin = "round";
+context.lineCap = "round";
 
-      // quadratic curve
-      context.quadraticCurveTo(230, 200, 250, 120);
+context.fillRect(0,0,w,h); // Draw the background
+context.fillStyle = strokeColor; // Set the fill to the same color as the stroke
 
-      // bezier curve
-      context.bezierCurveTo(290, -40, 300, 200, 400, 150);
+// Other variables
+var w = canvas.width;
+var h = canvas.height;
+var mouseIsDown = false;
+var xCor = [];
+var yCor = [];
 
-      // line 2
-      context.lineTo(500, 90);
+canvas.onmousedown = function(event){
+      //Starts drawing
+      xCor = []; // Reset the xCor array
+      yCor = []; // Reset the yCor array
+      draw(event);
+      mouseIsDown = true;
+}
+canvas.onmouseup = function(event){
+      // Stops drawing
+      if(mouseIsDown) mouseClick(event);
+      mouseIsDown = false;
+}
 
-      context.lineWidth = 5;
-      context.strokeStyle = 'blue';
+canvas.onmousemove = function(event){
+      // Adds the new coordinate to the line array and redraws the line
+      if(!mouseIsDown) return;
+      draw(event);
+      return false;
+}
+
+canvas.onmouseout = function(event){
+      // Executed when mouse leaves canvas
+      // Stops drawing when mouse leaves canvas
+      if(mouseIsDown){draw(event)};
+      mouseIsDown = false;
+}
+
+function draw(event){
+      // Get coordinates and add it to the line array
+      var x = event.x;
+      var y = event.y;
+      x -= canvas.offsetLeft;
+      y -= canvas.offsetTop;
+      xCor.push(x);
+      yCor.push(y);
+
+      // Draw the line
+      context.beginPath();
+      for (var i = 0; i < xCor.length; i++) {
+            context.lineTo(xCor[i], yCor[i]);
+      };
+
+      // Update settings and stroke
+      context.lineWidth = strokeWidth;
+      context.strokeStyle = strokeColor;
       context.stroke();
+}
+
+function mouseClick(event){
+      // Executed when mouse is released inside canvas
+      // Get coordinates
+      if(xCor.length <= 1){
+            var x = event.x;
+            var y = event.y;
+            x -= canvas.offsetLeft;
+            y -= canvas.offsetTop;
+            context.fillRect(x, y, strokeWidth, strokeWidth);
+      }
+}
