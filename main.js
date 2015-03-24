@@ -1,85 +1,43 @@
-// Define the canvas element
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
+var settingButton = document.getElementsByClassName("settingButton");
 
-// Define initial settings
-var bgColor = "white";
-var strokeColor = "black";
-var strokeWidth = 5;
+var preview = document.getElementById("preview");
+var brushSizeRange = document.getElementById("brushSizeRange");
 
-// Set initial settings
-context.fillStyle = bgColor;
-context.strokeStyle = strokeColor;
-context.lineWidth = strokeWidth;
-context.lineJoin = "round";
-context.lineCap = "round";
+var colors = ["#000", "#212121", "#616161", "#BDBDBD", "#F5F5F5", "#fff","#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#607D8B"]
 
-context.fillRect(0,0,w,h); // Draw the background
-context.fillStyle = strokeColor; // Set the fill to the same color as the stroke
+window.onload = setColors;
 
-// Other variables
-var w = canvas.width;
-var h = canvas.height;
-var mouseIsDown = false;
-var xCor = [];
-var yCor = [];
-
-canvas.onmousedown = function(event){
-      //Starts drawing
-      xCor = []; // Reset the xCor array
-      yCor = []; // Reset the yCor array
-      draw(event);
-      mouseIsDown = true;
-}
-canvas.onmouseup = function(event){
-      // Stops drawing
-      if(mouseIsDown) mouseClick(event);
-      mouseIsDown = false;
+function setColors(){
+	for (var i = 0; i < settingButton.length; i++) {
+		settingButton[i].style.background = colors[i];
+	};
 }
 
-canvas.onmousemove = function(event){
-      // Adds the new coordinate to the line array and redraws the line
-      if(!mouseIsDown) return;
-      draw(event);
-      return false;
-}
+$("div").click(function() {
+	var clickedClass = $(this).attr("class");
+	if(clickedClass == "settingButton"){
+		for (var i = 0; i < settingButton.length; i++) {
+			settingButton[i].className = "settingButton";
+		};
+		this.className = "settingButton current";
+		for (var i = 0; i < settingButton.length; i++) {
+			if(settingButton[i].className == "settingButton current"){
+				strokeColor = colors[i];
+				preview.style.background = colors[i];
+			}
+		};
+	}
+});
 
-canvas.onmouseout = function(event){
-      // Executed when mouse leaves canvas
-      // Stops drawing when mouse leaves canvas
-      if(mouseIsDown){draw(event)};
-      mouseIsDown = false;
-}
+brushSizeRange.oninput 	= brushSizeChange;
+brushSizeRange.onchange = brushSizeChange;
 
-function draw(event){
-      // Get coordinates and add it to the line array
-      var x = event.x;
-      var y = event.y;
-      x -= canvas.offsetLeft;
-      y -= canvas.offsetTop;
-      xCor.push(x);
-      yCor.push(y);
-
-      // Draw the line
-      context.beginPath();
-      for (var i = 0; i < xCor.length; i++) {
-            context.lineTo(xCor[i], yCor[i]);
-      };
-
-      // Update settings and stroke
-      context.lineWidth = strokeWidth;
-      context.strokeStyle = strokeColor;
-      context.stroke();
-}
-
-function mouseClick(event){
-      // Executed when mouse is released inside canvas
-      // Get coordinates
-      if(xCor.length <= 1){
-            var x = event.x;
-            var y = event.y;
-            x -= canvas.offsetLeft;
-            y -= canvas.offsetTop;
-            context.fillRect(x, y, strokeWidth, strokeWidth);
-      }
+function brushSizeChange(){
+	var brushSize = brushSizeRange.value / 2;
+	if(brushSize <= 0){
+		brushSize = 1;
+	}
+	strokeWidth = brushSize;
+	preview.style.height = brushSize + "px";
+	preview.style.width = brushSize + "px";
 }
