@@ -47,13 +47,13 @@ drawRef.on("child_added", function(snapshot) {
                   var yMid = message.lineY[i - 1] + (message.lineY[i] - message.lineY[i - 1]) / 2;
                   context.quadraticCurveTo(message.lineX[i - 1], message.lineY[i - 1], xMid, yMid)
             }else{
-                 context.lineTo(message.lineX[i], message.lineY[i]);
+                 context.arc(message.lineX, message.lineY, 1, 0, 2 * Math.PI);
             }  
-            console.log(message.lineX[i]);
-            console.log(message.lineY[i]);
+            //console.log(message.lineX[i]);
+            //console.log(message.lineY[i]);
       };
-      context.lineWidth = strokeWidth;
-      context.strokeStyle = strokeColor;
+      context.lineWidth = message.strokeWidth;
+      context.strokeStyle = message.strokeColor;
       context.stroke();
 });
 
@@ -69,11 +69,13 @@ canvas.onmousedown = function(event){
 canvas.onmouseup = function(event){
       // Stops drawing
       if(mouseIsDown) mouseClick(event);
+      mouseIsDown = false;
       drawRef.push({
+                  strokeWidth: strokeWidth,
+                  strokeColor: strokeColor,
                   lineX: xCor,
                   lineY: yCor
       });
-      mouseIsDown = false;
 }
 
 window.onmouseup = function(event){
@@ -95,6 +97,12 @@ canvas.onmouseout = function(event){
       // Stops drawing when mouse leaves canvas
       if(mouseIsDown){
             draw(event);
+            drawRef.push({
+                  strokeWidth: strokeWidth,
+                  strokeColor: strokeColor,
+                  lineX: xCor,
+                  lineY: yCor
+            });
       }
       mouseIsOut = true;
       toggleCursor();
