@@ -26,6 +26,38 @@ context.lineCap = "round";
 context.fillRect(0,0,w,h); // Draw the background
 context.fillStyle = strokeColor; // Set the fill to the same color as the stroke
 
+// Writing to Firebase
+
+
+// Setting initial conditions
+ref.set({
+      drawing2: {
+
+      }
+});
+
+var drawRef = ref.child("drawing2");
+
+drawRef.on("child_added", function(snapshot) {
+      var message = snapshot.val();
+      context.beginPath();
+      for (var i = 0; i < message.lineX.length; i++) {
+            if(i >= 1){
+                  var xMid = message.lineX[i - 1] + (message.lineX[i] - message.lineX[i - 1]) / 2;
+                  var yMid = message.lineY[i - 1] + (message.lineY[i] - message.lineY[i - 1]) / 2;
+                  context.quadraticCurveTo(message.lineX[i - 1], message.lineY[i - 1], xMid, yMid)
+            }else{
+                 context.lineTo(message.lineX[i], message.lineY[i]);
+            }  
+            console.log(message.lineX[i]);
+            console.log(message.lineY[i]);
+      };
+      context.lineWidth = strokeWidth;
+      context.strokeStyle = strokeColor;
+      context.stroke();
+});
+
+
 
 canvas.onmousedown = function(event){
       //Starts drawing
@@ -37,6 +69,10 @@ canvas.onmousedown = function(event){
 canvas.onmouseup = function(event){
       // Stops drawing
       if(mouseIsDown) mouseClick(event);
+      drawRef.push({
+                  lineX: xCor,
+                  lineY: yCor
+      });
       mouseIsDown = false;
 }
 

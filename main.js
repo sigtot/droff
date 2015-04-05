@@ -5,7 +5,7 @@ var brushSizeRange = document.getElementById("brushSizeRange");
 
 var colors = ["#000", "#212121", "#616161", "#BDBDBD", "#F5F5F5", "#fff","#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548", "#607D8B"]
 var colorButtons;
-//var ref = new Firebase("https://droff.firebaseio.com/");
+var ref = new Firebase("https://droff.firebaseio.com/");
 
 function makeColors(){
 	colorButtons = "<div class='settingButton current'></div> ";
@@ -24,19 +24,6 @@ function setColors(){
 }
 
 window.onload = makeColors(), setColors();
-
-
-/*var drawRef = ref.child("drawing2");
-
-drawRef.push({
-    line1: 4,
-    line2: 2,
-    line3: 3	
-});
-
-drawRef.on("value", function(snapshot) {
-  alert(snapshot.val());  // a number
-});*/
 
 $("div").click(function() {
 	var clickedClass = $(this).attr("class");
