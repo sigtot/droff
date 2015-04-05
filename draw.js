@@ -1,6 +1,7 @@
 // Define the canvas element
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
+var cursor = document.getElementById("cursor");
 
 // Define initial settings
 var bgColor = "#fff";
@@ -47,6 +48,7 @@ window.onmouseup = function(event){
 
 canvas.onmousemove = function(event){
       // Adds the new coordinate to the line array and redraws the line
+      moveCursor(event);
       if(!mouseIsDown) return;
       draw(event);
       return false;
@@ -55,11 +57,16 @@ canvas.onmousemove = function(event){
 canvas.onmouseout = function(event){
       // Executed when mouse leaves canvas
       // Stops drawing when mouse leaves canvas
+      if(mouseIsDown){
+            draw(event);
+      }
       mouseIsOut = true;
+      toggleCursor();
 }
 
 canvas.onmouseenter = function(event){
       mouseIsOut = false;
+      toggleCursor();
 }
 
 function draw(event){
@@ -77,9 +84,9 @@ function draw(event){
 		if(i >= 1){
 			var xMid = xCor[i - 1] + (xCor[i] - xCor[i - 1]) / 2;
 			var yMid = yCor[i - 1] + (yCor[i] - yCor[i - 1]) / 2;
-			context.quadraticCurveTo(xCor[i -1], yCor[i -1], xMid, yMid)
+			context.quadraticCurveTo(xCor[i - 1], yCor[i - 1], xMid, yMid)
 		}else{
-	    context.lineTo(xCor[i], yCor[i]);
+	           context.lineTo(xCor[i], yCor[i]);
 		}	
 	};
 
@@ -87,6 +94,10 @@ function draw(event){
 	context.lineWidth = strokeWidth;
 	context.strokeStyle = strokeColor;
 	context.stroke();
+
+      if(mouseIsOut){
+            return;
+      }
 }
 
 function mouseClick(event){
@@ -99,5 +110,18 @@ function mouseClick(event){
             y -= canvas.offsetTop;
             context.arc(x, y, 1, 0, 2 * Math.PI);
             context.stroke();
+      }
+}
+
+function moveCursor(event){
+      cursor.style.left = event.x + 2 + "px";
+      cursor.style.top = event.y + 2 + "px";
+}
+
+function toggleCursor(){
+      if(mouseIsOut){
+            cursor.style.display = "none";
+      }else{
+            cursor.style.display = "block";
       }
 }
