@@ -14,7 +14,36 @@
 	</head>
 
 	<body>
-		<div id="topBar">
+		<div id="splash">
+			<img id="hero" src="img/blur.jpg" class="widthIsSmallest">
+			<div id="loginContainer" class="box">
+
+				<div id="loginPart">
+					<h2>Login</h2>
+					<input class="loginInput" id="loginUpUser" type="text" name="username" placeholder="Username">
+					<input class="loginInput" id="loginUpPass" type="password" name="password" placeholder="Password">
+					<button id="loginSubmit">Login</button>
+				</div>
+
+				<div id="devider"></div>
+
+				<div id="signUpPart">
+					<h2>Sign Up</h2>
+					<input class="signUpInput" id="signUpUser" type="text" name="username" placeholder="Username">
+					<input class="signUpInput" id="signUpEmail" type="text" name="email" placeholder="Email">
+					<input class="signUpInput" id="signUpPass" type="password" name="password" placeholder="Password">
+					<button id="signUpSubmit">Sign Up</button>
+				</div>
+
+			</div>
+
+			<div id="orGuest">
+				<h2>Or play instantly as a guest</h2>
+				<button id="enterGuest" class="activeButton">Enter</button>
+			</div>
+		</div>
+
+		<!--<div id="topBar">
 			<h1>Dr<span>off!</span></h1>
 		</div>
 		<canvas id="canvas" height="500" width="800">Sorry, your browser does not support the html5 canvas element. Upgrading your browser fixes this issue.</canvas>
@@ -22,25 +51,19 @@
 		<div id="cursor">
 		</div>
 
-		<div id="appContainer">
-			<div id="settingsTop">
-				<h2 class="topDesc">Brush Settings</h2>
-			</div>
-			<div id="settingsPanel" class="box">
-				<div class="wrapper">
-					<h2 class="desc">Colors</h2>
-					<div id="settingButtons">
-						
-					</div>
-					<h2 class="desc">Size</h2>
-					<input type="range" id="brushSizeRange" value="5">
-					<div id="preview">
+		<div id="settingsPanel" class="box">
+			<div class="wrapper">
+				<h2 class="desc">Colors</h2>
+				<div id="settingButtons">
+					
+				</div>
+				<h2 class="desc">Size</h2>
+				<input type="range" id="brushSizeRange" value="5">
+				<div id="preview">
 
-					</div>
-					<!--<h2 class="desc">Type</h2>-->
 				</div>
 			</div>
-		</div>
+		</div>-->
 		<script src="main.js"></script>
 		<script src="draw.js"></script>
 	</body>
