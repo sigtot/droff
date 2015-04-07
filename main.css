@@ -11,7 +11,7 @@
 body{
 	background:		#eee;
 	cursor:			default;
-	font-family:	Martel Sans;
+	font-family:	Source Sans Pro;
 	margin:			0;
 	padding:		0;
 
@@ -83,7 +83,7 @@ h1{
 }
 
 .topDesc{
-	font-family:Martel Sans;
+	font-family:Source Sans Pro;
 	color:#fff;
 	font-size:18px;
 	line-height:27px;
@@ -258,21 +258,25 @@ input[type="range"]:focus{
 	font-size:30px;
 	padding:0;
 	margin:0;
+	margin-bottom:20px;
 }
 
 #loginContainer input{
 	margin-top:10px;
 	margin-bottom:25px;
 	height:30px;
-	width:160px;
+	width:140px;
 	border-radius:5px;
 	border:none;
 	outline:none;
 	background:#eee;
 	display:block;
 	box-shadow:inset 0px 0px 1px rgba(0,0,0,0.1),inset 0px 1px 1px rgba(0,0,0,0.3);
-	padding-left:5px;
+	padding-left:10px;
+	padding-right:10px;
 	color:#F44336;
+	font-family:Source Sans Pro;
+	font-size:14px;
 }
 
 #loginContainer input:focus{
@@ -344,10 +348,12 @@ input[type="range"]:focus{
 	width:110px;
 	background:transparent;
 	color:#F44336;
-	font-family:Martel Sans;
-	font-weight:500;
+	font-family:Source Sans Pro;
+	font-weight:400;
 	font-size:15px;
 	cursor:pointer;
+	transition:0.5s;
+	pointer-events:none;
 }
 
 #orGuest{
@@ -370,6 +376,7 @@ input[type="range"]:focus{
 }
 
 #orGuest h2{
+	margin-bottom:15px;
 	font-weight:300;
 	font-size:30px;
 }
@@ -383,13 +390,40 @@ input[type="range"]:focus{
 	width:150px;
 	background:#F44336;
 	color:#fff;
-	font-family:Martel Sans;
-	font-weight:500;
+	font-family:Source Sans Pro;
+	font-weight:400;
 	font-size:20px;
 	cursor:pointer;
 	transition:0.5s;
 }
 
 .activeButton:hover{
+	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+#app{
+	opacity:0;
+	pointer-events:none;
+}
+
+#loginContainer button.ready{
+	pointer-events:initial;
+	background:#F44336;
+	color:#fff;
+}
+
+#loginContainer button:hover{
+	box-shadow: none;
+}
+
+#loginContainer button:focus{
+	box-shadow: none;
+}
+
+#loginContainer button.ready:hover{
+	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+#loginContainer button.ready:focus{
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
 }
