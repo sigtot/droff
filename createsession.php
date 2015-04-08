@@ -27,16 +27,16 @@ $user = $_POST["username"];
 $user = mysqli_real_escape_string($conn, $user);
 
 // Get row
-$result = $conn->query("SELECT username FROM users WHERE username = '$user'");
+$result = $conn->query("SELECT username FROM users WHERE username = '$user' OR email = '$user'");
 $row = mysqli_fetch_row($result);
 if (empty($row[0])){
 	// User does not exist
 	echo "fail";
 }else{
 	// User exists
-	$result = $conn->query("SELECT username FROM sessions WHERE username = '$user'");
-	$row = mysqli_fetch_row($result);
-	if(empty($row[0])){
+	//$result = $conn->query("SELECT username FROM sessions WHERE username = '$user'");
+	//$row = mysqli_fetch_row($result);
+	//if(empty($row[0])){
 		// Session does not exist
 		
 
@@ -50,11 +50,9 @@ if (empty($row[0])){
 		// Generate and insert hash and username into table
 		// Echo hash to javacript to add the cookie to the browser
 
-	}else{
+	//}else{
 		// Session exists
-		echo "session exists";
-	}
+	//	echo "session exists";
+	//}
 }
-
-
 ?>

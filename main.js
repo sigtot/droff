@@ -12,6 +12,8 @@ var signUpEmail  		= document.getElementById("signUpEmail");
 var signUpPass  		= document.getElementById("signUpPass");
 var signUpSubmit		= document.getElementById("signUpSubmit");
 
+var loggedInText		= document.getElementById("loggedInText");
+
 // Brush settings
 var preview 		= document.getElementById("preview");
 var brushSizeRange 	= document.getElementById("brushSizeRange");
@@ -51,6 +53,58 @@ function validateEmail(email) {
 	return re.test(email);
 }
 
+// Finne cookie etter navn
+function getCookie(cName){
+    var i,x,y,ARRcookies=document.cookie.split(";");
+
+    for (i=0;i<ARRcookies.length;i++)
+    {
+        x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+        y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+        x=x.replace(/^\s+|\s+$/g,"");
+        if (x==cName)
+        {
+            return unescape(y);
+        }
+    }
+}
+
+// Resume session
+function resumeSession(){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// There is a cookie
+		var cookieSplit = currentCookie.split(",");
+
+		var user = cookieSplit[0];
+		var token = cookieSplit[1];
+
+		// Check if the cookie has a corresponding session
+		$.ajax({
+		type: "POST",
+		url: "resumesession.php",
+		data: { username: user, token: token}
+		}).done(function( msg ) {
+		var msgSplit = msg.split(",");
+		if(msg == "success"){
+			// User is logged in
+			loggedInText.innerHTML = user + " is logged in";
+		}else{
+			// User is not logged in
+			if(msg == "fail"){
+				loggedInText.innerHTML = "Not logged in";
+			}else{
+				loggedInText.innerHTML= msg;
+			}
+		}
+		});
+
+	}else{
+		// No current session
+	}
+}
+
+
 // Lag fargeelementene
 function makeColors(){
 	colorButtons = "<div class='settingButton current'></div> ";
@@ -68,7 +122,7 @@ function setColors(){
 }
 
 // Kjører når alt loader
-window.onload = makeColors(), setColors();
+window.onload = makeColors(), setColors(), resumeSession();
 
 // Jquery :D
 $("div").click(function() {
