@@ -1,5 +1,5 @@
 /*--------------------------------------------
-					Variabler
+			Variabler
 ---------------------------------------------*/
 
 /* Elementer*/
@@ -275,8 +275,17 @@ function createSession(user){
 		url: "createsession.php",
 		data: { username: user }
 		}).done(function( msg ) {
-		if(msg == "success"){
-			alert("Session index was added to database sooon");
+		var msgSplit = msg.split(",");
+		if(msgSplit[0] == "success"){
+			alert(user + "," + msgSplit[1]);
+			var now = new Date();
+			var time = now.getTime();
+			time += 200000 * 3600 * 1000;
+			now.setTime(time);
+			document.cookie = 
+			'sessioncookie=' + user + "," + msgSplit[1] + 
+			'; expires=' + now.toUTCString() + 
+			'; path=/';
 		}else{
 			if(msg == "fail"){
 				alert("error");
@@ -284,5 +293,11 @@ function createSession(user){
 				alert(msg);
 			}
 		}
+		/*// Fjern metadata etter semicolon
+		var cookieValue = document.cookie.split(";");
+
+		// Del opp cookie i user og token
+		var cookieSplit = cookieValue[0].split(",");
+		alert(cookieSplit[0] + " " + cookieSplit[1]);*/
 	});
 }

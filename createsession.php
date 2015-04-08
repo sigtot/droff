@@ -38,8 +38,14 @@ if (empty($row[0])){
 	$row = mysqli_fetch_row($result);
 	if(empty($row[0])){
 		// Session does not exist
-		echo "success";
+		
 
+		$token = md5(uniqid($user, true));
+
+		$sql = "INSERT INTO sessions VALUES ('$user', '$token')";
+		$result = $conn->query($sql);
+
+		echo "success," . $token;
 		// Rename cookie coloumn to hash coloumn or something
 		// Generate and insert hash and username into table
 		// Echo hash to javacript to add the cookie to the browser
