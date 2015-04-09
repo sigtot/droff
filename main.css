@@ -235,6 +235,7 @@ input[type="range"]:focus{
 	height:309px;
 	width:500px;
 	background:#fff;
+	transition:0.5s;
 }
 
 #loginContainer *{
@@ -277,6 +278,7 @@ input[type="range"]:focus{
 	color:#F44336;
 	font-family:Source Sans Pro;
 	font-size:14px;
+	transition:0.5s;
 }
 
 #loginContainer input:focus{
@@ -373,6 +375,9 @@ input[type="range"]:focus{
 	background:#fff;
 	color:#555;
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+
+	transition:0.5s;
+	transition-delay:0.1s;
 }
 
 #orGuest h2{
@@ -426,4 +431,8 @@ input[type="range"]:focus{
 
 #loginContainer button.ready:focus{
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+.error{
+	background:#FFD9D9 !important;
 }

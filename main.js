@@ -11,6 +11,9 @@ var signUpUser  		= document.getElementById("signUpUser");
 var signUpEmail  		= document.getElementById("signUpEmail");
 var signUpPass  		= document.getElementById("signUpPass");
 var signUpSubmit		= document.getElementById("signUpSubmit");
+var enterGuest			= document.getElementById("enterGuest");
+var loginContainer		= document.getElementById("loginContainer");
+var orGuest				= document.getElementById("orGuest");
 
 var loggedInText		= document.getElementById("loggedInText");
 
@@ -44,8 +47,13 @@ var ref = new Firebase("https://droff.firebaseio.com/");
 
 
 /*--------------------------------------------
-	Onload functions og andre småfunksjoner
+		Onload functions og snippets
 ---------------------------------------------*/
+
+// Tilfeldig tall mellom min, max
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Validere emails
 function validateEmail(email) {
@@ -88,7 +96,7 @@ function resumeSession(){
 		var msgSplit = msg.split(",");
 		if(msg == "success"){
 			// User is logged in
-			loggedInText.innerHTML = user + " is logged in";
+			loginPage();
 		}else{
 			// User is not logged in
 			if(msg == "fail"){
@@ -241,7 +249,7 @@ function signUp(){
 	        }else{
 	        	// Brukernavnet finnes
 	            if(msg == "userExists"){
-	            	alert("username is taken");
+	            	signUpUser.className = "signUpInput error";
 	            	return;
 	            }
 
@@ -269,7 +277,9 @@ function signUp(){
 	        signUpSubmit.innerHTML = "Sign Up";
 	        finishedRequest = true;
 	    });
-	
+		if(finishedRequest = true){
+			signUpSubmit.innerHTML = "Sign Up";
+		}
 		setTimeout(
 			function(){ 
 				signUpSubmit.innerHTML = "Sign Up";
@@ -292,7 +302,7 @@ function login(){
 			}).done(function( msg ) {
 			var msgSplit = msg.split(",");
 			if(msgSplit[0] == "success"){
-				alert("Logged in " + msgSplit[1]);
+				// Successfully logged in
 				createSession(msgSplit[1]);
 			}else{
 				if(msg == "fail"){
@@ -323,8 +333,10 @@ function enterCheck(event){
 	}
 }
 
+enterGuest.onclick = function(){
+	createSession("guest");
+}
 function createSession(user){
-	alert("create session cookie for " + user);
 	$.ajax({
 		type: "POST",
 		url: "createsession.php",
@@ -332,15 +344,20 @@ function createSession(user){
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
 		if(msgSplit[0] == "success"){
-			alert(user + "," + msgSplit[1]);
+			// Set the time
 			var now = new Date();
 			var time = now.getTime();
 			time += 200000 * 3600 * 1000;
 			now.setTime(time);
+
+			// Create the cookie
 			document.cookie = 
 			'sessioncookie=' + user + "," + msgSplit[1] + 
 			'; expires=' + now.toUTCString() + 
 			'; path=/';
+
+			// Throw login page
+			loginPage();
 		}else{
 			if(msg == "fail"){
 				alert("error");
@@ -355,4 +372,9 @@ function createSession(user){
 		var cookieSplit = cookieValue[0].split(",");
 		alert(cookieSplit[0] + " " + cookieSplit[1]);*/
 	});
+}
+
+function loginPage(){
+	//loginContainer.style.top = "-600px";
+	//orGuest.style.top = "-200px";
 }
