@@ -237,6 +237,7 @@ function signUp(){
 	        }).done(function( msg ) {
 	        if(msg == "success"){
 	            alert("Welcome " + signUpUser.value);
+	            createSession(signUpUser.value);
 	        }else{
 	        	// Brukernavnet finnes
 	            if(msg == "userExists"){

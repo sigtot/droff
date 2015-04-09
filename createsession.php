@@ -1,14 +1,4 @@
 <?php
-/*
-Oppsett:
-	
-Når man logger inn eller signer opp sendes brukernavnet
-fra login.php eller signup.php, via ajax, til denne filen.
-
-Denne filen hasher 
-
-*/
-
 $servername = "localhost";
 $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
@@ -34,25 +24,11 @@ if (empty($row[0])){
 	echo "fail";
 }else{
 	// User exists
-	//$result = $conn->query("SELECT username FROM sessions WHERE username = '$user'");
-	//$row = mysqli_fetch_row($result);
-	//if(empty($row[0])){
-		// Session does not exist
-		
+	$token = md5(uniqid($user, true));
 
-		$token = md5(uniqid($user, true));
+	$sql = "INSERT INTO sessions VALUES ('$user', '$token')";
+	$result = $conn->query($sql);
 
-		$sql = "INSERT INTO sessions VALUES ('$user', '$token')";
-		$result = $conn->query($sql);
-
-		echo "success," . $token;
-		// Rename cookie coloumn to hash coloumn or something
-		// Generate and insert hash and username into table
-		// Echo hash to javacript to add the cookie to the browser
-
-	//}else{
-		// Session exists
-	//	echo "session exists";
-	//}
+	echo "success," . $token;
 }
 ?>
