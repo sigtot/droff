@@ -217,6 +217,7 @@ input[type="range"]:focus{
 	z-index:-1;
 	left:50%;
 	transform:translateX(-50%);
+	top:0;
 }
 
 .heightIsSmallest{
@@ -229,9 +230,8 @@ input[type="range"]:focus{
 
 #loginContainer{
 	position:absolute;
-	left:50%;
-	top:calc(50% - 100px);
-	transform:translate(-50%,-50%);
+	top:150px;
+	right:110px;
 	height:309px;
 	width:500px;
 	background:#fff;
@@ -347,7 +347,7 @@ input[type="range"]:focus{
 	outline:0;
 	border-radius:5px;
 	height:35px;
-	width:110px;
+	width:160px;
 	background:transparent;
 	color:#F44336;
 	font-family:Source Sans Pro;
@@ -387,19 +387,23 @@ input[type="range"]:focus{
 }
 
 #enterGuest{
+	position:absolute;
+	left:110px;
+	top:310px;
 	margin-top:0;
 	outline:0;
 	border:0;
 	border-radius:5px;
-	height:40px;
-	width:150px;
-	background:#F44336;
-	color:#fff;
+	height:70px;
+	width:250px;
+	background:#fff;
+	color:#F44336;
 	font-family:Source Sans Pro;
 	font-weight:400;
-	font-size:20px;
+	font-size:35px;
 	cursor:pointer;
 	transition:0.5s;
+	font-weight:400;
 }
 
 .activeButton:hover{
@@ -409,6 +413,7 @@ input[type="range"]:focus{
 #app{
 	opacity:0;
 	pointer-events:none;
+	transition:0.5s;
 }
 
 #loginContainer button.ready{
@@ -435,4 +440,45 @@ input[type="range"]:focus{
 
 .error{
 	background:#FFD9D9 !important;
+}
+
+#bodyContainer{
+	height:800px;
+	width:100%;
+	margin-top:500px;
+	background:#fff;
+	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+#navBar{
+	width:100%;
+	height:60px;
+	background:#fff;
+	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+#nameAndInfo{
+	position:absolute;
+	width:400px;
+	left:110px;
+	top:150px;
+}
+
+h1{
+	text-align:left;
+	font-family:Source Sans Pro;
+	font-size:70px;
+	color:#fff;
+}
+
+h2{
+	text-align:left;
+	font-family:Source Sans Pro;
+	font-size:20px;
+	color:#fff;
+	font-weight:300;
+}
+
+#splash{
+	transition:0.5s;
 }

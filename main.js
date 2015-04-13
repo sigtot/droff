@@ -14,7 +14,8 @@ var signUpSubmit		= document.getElementById("signUpSubmit");
 var enterGuest			= document.getElementById("enterGuest");
 var loginContainer		= document.getElementById("loginContainer");
 var orGuest				= document.getElementById("orGuest");
-
+var splash				= document.getElementById("splash");
+var app 				= document.getElementById("app");
 var loggedInText		= document.getElementById("loggedInText");
 
 // Brush settings
@@ -304,6 +305,12 @@ function login(){
 			if(msgSplit[0] == "success"){
 				// Successfully logged in
 				createSession(msgSplit[1]);
+
+				app.style.opacity = "100";
+				app.style.pointerEvents = "all";
+
+				splash.style.opacity = "0";
+				splash.style.pointerEvents = "none";
 			}else{
 				if(msg == "fail"){
 					alert("Wrong username or password, try again");
