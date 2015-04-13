@@ -14,9 +14,11 @@ var signUpSubmit		= document.getElementById("signUpSubmit");
 var enterGuest			= document.getElementById("enterGuest");
 var loginContainer		= document.getElementById("loginContainer");
 var orGuest				= document.getElementById("orGuest");
-var splash				= document.getElementById("splash");
-var app 				= document.getElementById("app");
+var splash				= document.getElementById("splashE");
+var app 				= document.getElementById("appE");
+var user 				= document.getElementById("userE");
 var loggedInText		= document.getElementById("loggedInText");
+
 
 // Brush settings
 var preview 		= document.getElementById("preview");
@@ -39,6 +41,7 @@ var colors = [
 // Global variables uten verdi
 var colorButtons;
 var signUpPassReady, signUpUserReady, signUpEmailReady, loginUserReady, loginPassReady;
+var badUser, badEmail;
 
 /* Tall og verdier */
 
@@ -208,6 +211,18 @@ function checkSignUpFields(){
     }else{
         signUpSubmit.className = "";
     }
+
+    // Fiks røde felt
+    if(signUpUser.value != badUser){
+		signUpUser.className = "signUpInput";
+	}else{
+		signUpUser.className = "signUpInput error";
+	}
+	if(signUpEmail.value != badEmail){
+		signUpEmail.className = "signUpInput";
+	}else{
+		signUpEmail.className = "signUpInput error";
+	}
 }
 
 // Login feltene oppfyller kriteriene
@@ -251,18 +266,21 @@ function signUp(){
 	        	// Brukernavnet finnes
 	            if(msg == "userExists"){
 	            	signUpUser.className = "signUpInput error";
+	            	badUser = signUpUser.value;
 	            	return;
 	            }
 
 	            // Emailen finnes
 	            if(msg == "emailExists"){
-	            	alert("email is taken");
+	            	signUpEmail.className = "signUpInput error";
+	            	badEmail = signUpEmail.value;
 	            	return;
 	            }
 
 	            // Både brukernavn og mail finnes
 	            if(msg == "bothExist"){
-	            	alert("A user with this username and email already exists, try logging in or request a password reset.");
+	            	signUpUser.className = "signUpInput error";
+					signUpEmail.className = "signUpInput error";
 	            	return;
 	            }
 
@@ -306,11 +324,8 @@ function login(){
 				// Successfully logged in
 				createSession(msgSplit[1]);
 
-				app.style.opacity = "100";
-				app.style.pointerEvents = "all";
-
-				splash.style.opacity = "0";
-				splash.style.pointerEvents = "none";
+				location.hash = "app";
+				
 			}else{
 				if(msg == "fail"){
 					alert("Wrong username or password, try again");
@@ -384,4 +399,34 @@ function createSession(user){
 function loginPage(){
 	//loginContainer.style.top = "-600px";
 	//orGuest.style.top = "-200px";
+}
+
+// Change page
+window.onhashchange = checkUrl;
+function checkUrl(){
+	// Reset elements
+	app.style.opacity = "0";
+	app.style.pointerEvents = "none";
+
+	user.style.opacity = "0";
+	user.style.pointerEvents = "none";
+
+	splash.style.opacity = "0";
+	splash.style.pointerEvents = "none";
+	
+	// Show element
+	if(window.location.hash == "#app"){
+		app.style.opacity = "100";
+		app.style.pointerEvents = "all";
+	}
+
+	if(window.location.hash == "#user"){
+		user.style.opacity = "100";
+		user.style.pointerEvents = "all";
+	}
+
+	if(window.location.hash == "#splash"){
+		splash.style.opacity = "100";
+		splash.style.pointerEvents = "all";
+	}
 }

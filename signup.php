@@ -26,11 +26,27 @@ $user = mysqli_real_escape_string($conn, $user);
 $pass = mysqli_real_escape_string($conn, $pass);
 $email = mysqli_real_escape_string($conn, $email);
 
-$result = $conn->query("SELECT * FROM users WHERE username = '$user' OR email = '$email'");
+$result = $conn->query("SELECT * FROM users WHERE username = '$user'");
 $row = mysqli_fetch_row($result);
 
+$result = $conn->query("SELECT * FROM users WHERE email = '$email'");
+$otherrow = mysqli_fetch_row($result);
+
 if(empty($row[1])) {
-	// Hverken brukernavn eller email er registrert før
+	// Brukernavn er ikke registrert før
+	$userTaken = false;
+} else {
+	$userTaken = true;
+}
+
+if(empty($otherrow[1])) {
+	// Email er ikke registrert før
+	$emailTaken = false;
+} 	else {
+	$emailTaken = true;
+}
+
+if($userTaken == false && $emailTaken == false){
 	$options = [
 		"cost" => 11,
 	];
@@ -40,19 +56,20 @@ if(empty($row[1])) {
 	$sql = "INSERT INTO users VALUES ('$newid', '$user', '$hash', '$email')";
 	$result = $conn->query($sql);
 	echo "success";
-} elseif ($user == $row[1] && $email != $row[3]){
-	// Brukernavnet et tatt
-	echo "userExists";
-} elseif ($email == $row[3] && $user != $row[1]){
+}	elseif ($userTaken == false && $emailTaken == true){
 	// Emailen er tatt
 	echo "emailExists";
-} elseif ($user == $row[1] && $email == $row[3]){
+}	elseif ($userTaken == true && $emailTaken == false){
+	// Brukernavnet et tatt
+	echo "userExists";
+}	elseif ($userTaken == true && $emailTaken == true){
 	// Begge er tatt
 	echo "bothExist";
-} else {
+}	else{
 	// Error
 	echo "fail";
 }
+
 /*if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {

@@ -231,7 +231,8 @@ input[type="range"]:focus{
 #loginContainer{
 	position:absolute;
 	top:150px;
-	right:110px;
+	left:50%;
+	margin-left:60px;
 	height:309px;
 	width:500px;
 	background:#fff;
@@ -275,7 +276,7 @@ input[type="range"]:focus{
 	box-shadow:inset 0px 0px 1px rgba(0,0,0,0.1),inset 0px 1px 1px rgba(0,0,0,0.3);
 	padding-left:10px;
 	padding-right:10px;
-	color:#F44336;
+	color:#01579B;
 	font-family:Source Sans Pro;
 	font-size:14px;
 	transition:0.5s;
@@ -343,13 +344,13 @@ input[type="range"]:focus{
 
 #loginContainer button{
 	margin-top:0;
-	border: solid 2px #F44336;
+	border: solid 2px #01579B;
 	outline:0;
 	border-radius:5px;
 	height:35px;
 	width:160px;
 	background:transparent;
-	color:#F44336;
+	color:#01579B;
 	font-family:Source Sans Pro;
 	font-weight:400;
 	font-size:15px;
@@ -388,29 +389,30 @@ input[type="range"]:focus{
 
 #enterGuest{
 	position:absolute;
-	left:110px;
-	top:310px;
-	margin-top:0;
+	left:0;
+	margin-right:50px;
+	margin-top:15px;
 	outline:0;
 	border:0;
 	border-radius:5px;
 	height:70px;
 	width:250px;
 	background:#fff;
-	color:#F44336;
+	color:#01579B;
 	font-family:Source Sans Pro;
 	font-weight:400;
 	font-size:35px;
 	cursor:pointer;
 	transition:0.5s;
 	font-weight:400;
-}
-
-.activeButton:hover{
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
 }
 
-#app{
+#enterGuest:hover{
+	box-shadow: 0px 7px 14px rgba(0,0,0,0.1), 0px 6px 6px -6px rgba(0,0,0,0.5), 0px 0px 5px rgba(255,255,255,0.5);
+}
+
+#appE{
 	opacity:0;
 	pointer-events:none;
 	transition:0.5s;
@@ -418,7 +420,7 @@ input[type="range"]:focus{
 
 #loginContainer button.ready{
 	pointer-events:initial;
-	background:#F44336;
+	background:#01579B;
 	color:#fff;
 }
 
@@ -459,19 +461,21 @@ input[type="range"]:focus{
 
 #nameAndInfo{
 	position:absolute;
-	width:400px;
-	left:110px;
+	width:500px;
+	right:50%;
+	margin-right:60px;
 	top:150px;
 }
 
-h1{
+#nameAndInfo h1{
 	text-align:left;
 	font-family:Source Sans Pro;
 	font-size:70px;
 	color:#fff;
+	text-shadow: 0px 0px 5px rgba(255,255,255,0.3);
 }
 
-h2{
+#nameAndInfo h2{
 	text-align:left;
 	font-family:Source Sans Pro;
 	font-size:20px;
@@ -479,6 +483,7 @@ h2{
 	font-weight:300;
 }
 
-#splash{
+#splashE{
 	transition:0.5s;
 }
+
