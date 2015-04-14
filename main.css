@@ -487,3 +487,24 @@ input[type="range"]:focus{
 	transition:0.5s;
 }
 
+#userE{
+	transition:0.5s;
+}
+
+#gameModeContainer{
+	width: 1000px;
+}
+
+.gameMode{
+	display:inline-block;
+}
+
+#friend{
+	margin-left:100px; margin-right: 100px;
+}
+
+#gameModeContainer h3{
+	color:#fff;
+	font-weight:300;
+	font-size:25px;
+}

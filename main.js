@@ -324,7 +324,7 @@ function login(){
 				// Successfully logged in
 				createSession(msgSplit[1]);
 
-				location.hash = "app";
+				location.hash = "user";
 				
 			}else{
 				if(msg == "fail"){
@@ -418,15 +418,38 @@ function checkUrl(){
 	if(window.location.hash == "#app"){
 		app.style.opacity = "100";
 		app.style.pointerEvents = "all";
+		setTimeout(function(){ noDisplay(app); }, 500);
 	}
 
 	if(window.location.hash == "#user"){
 		user.style.opacity = "100";
 		user.style.pointerEvents = "all";
+		setTimeout(function(){ noDisplay(user); }, 500);
 	}
 
 	if(window.location.hash == "#splash"){
 		splash.style.opacity = "100";
 		splash.style.pointerEvents = "all";
+		setTimeout(function(){ noDisplay(splash); }, 500);
+	}
+}
+
+function noDisplay(element){
+	if(element.id != "appE"){
+		app.style.display = "none";
+	}else{
+		app.style.display = "block";
+	}
+
+	if(element.id != "userE"){
+		user.style.display = "none";
+	}else{
+		user.style.display = "block";
+	}
+
+	if(element.id != "splashE"){
+		splash.style.display = "none";
+	}else{
+		splash.style.display = "block";
 	}
 }
