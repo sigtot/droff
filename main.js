@@ -134,7 +134,7 @@ function setColors(){
 }
 
 // Kjører når alt loader
-window.onload = makeColors(), setColors(), resumeSession();
+window.onload = makeColors(), setColors(), resumeSession(), checkUrl();
 
 // Jquery :D
 $("div").click(function() {
@@ -416,40 +416,45 @@ function checkUrl(){
 	
 	// Show element
 	if(window.location.hash == "#app"){
-		app.style.opacity = "100";
-		app.style.pointerEvents = "all";
-		setTimeout(function(){ noDisplay(app); }, 500);
+		app.style.display = "block";
+		// The display isn't animatable thus needs to trigger before the fading
+		// A 0-time timeout fixes this
+		setTimeout(function(){ noDisplay(app); }, 0);
 	}
 
 	if(window.location.hash == "#user"){
-		user.style.opacity = "100";
-		user.style.pointerEvents = "all";
-		setTimeout(function(){ noDisplay(user); }, 500);
+		user.style.display = "block";
+		setTimeout(function(){ noDisplay(user); }, 0);
 	}
 
 	if(window.location.hash == "#splash"){
-		splash.style.opacity = "100";
-		splash.style.pointerEvents = "all";
-		setTimeout(function(){ noDisplay(splash); }, 500);
+		splash.style.display = "block";
+		setTimeout(function(){ noDisplay(splash); }, 0);
 	}
 }
 
 function noDisplay(element){
+	// Dont show unless true
 	if(element.id != "appE"){
 		app.style.display = "none";
 	}else{
-		app.style.display = "block";
+		app.style.opacity = "100";
+		app.style.pointerEvents = "all";
 	}
 
+	// Dont show unless true
 	if(element.id != "userE"){
 		user.style.display = "none";
 	}else{
-		user.style.display = "block";
+		user.style.opacity = "100";
+		user.style.pointerEvents = "all";
 	}
 
+	// Dont show unless true
 	if(element.id != "splashE"){
 		splash.style.display = "none";
 	}else{
-		splash.style.display = "block";
+		splash.style.opacity = "100";
+		splash.style.pointerEvents = "all";
 	}
 }
