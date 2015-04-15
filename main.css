@@ -492,19 +492,41 @@ input[type="range"]:focus{
 }
 
 #gameModeContainer{
-	width: 1000px;
+	position:absolute;
+	left:calc(50% - 450px);
+	overflow:visible;
+	top:200px;
 }
 
 .gameMode{
+	position:relative;
 	display:inline-block;
-}
-
-#friend{
-	margin-left:100px; margin-right: 100px;
+	width:300px;
 }
 
 #gameModeContainer h3{
 	color:#fff;
 	font-weight:300;
 	font-size:25px;
+	text-align:center;
+}
+
+.gameModeIcon{
+	width:128px;
+	position:relative;
+	top:0;
+	left:50%;
+	transform: translateX(-50%);
+}
+
+.gameMode, .gameMode *{
+	transition:0.5s;
+}
+
+.gameMode:hover{
+	cursor:pointer;
+}
+
+.gameMode:hover .gameModeIcon{
+	top:-10px;
 }
