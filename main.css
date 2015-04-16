@@ -160,7 +160,7 @@ input[type="range"]{
 
 input[type="range"]::-webkit-slider-thumb{
 	-webkit-appearance:none !important;  
-	background:#96031a;
+	background:#01579B;
 	height:20px;
 	width:8px;
 }
@@ -542,6 +542,8 @@ input[type="range"]:focus{
 	line-height:60px;
 	top:0;
 	cursor:pointer;
+	width:200px;
+	margin-left:15px;
 }
 
 #userName:after{
@@ -557,6 +559,49 @@ input[type="range"]:focus{
 	transition:0.2s;
 }
 
-#userName:hover:after{
-	top:15px;
+#userName:hover{
+	opacity:0.9;
+}
+
+.dropDown{
+	background:#fff;
+	width:200px;
+	position:absolute;
+	overflow:hidden;
+	transition:0.2s;
+}
+
+.dropDown li, .dropDown ul{
+	padding:0;
+	margin:0;
+}
+
+.dropDown li{
+	list-style-type:none;
+	color:#333;
+	font-size:25px;
+	font-weight:300;
+	margin-bottom:5px;
+	margin-top:5px;
+	margin-left:15px;
+	margin-right:15px;
+	box-shadow:inset 0px -1px 0px transparent;
+	transition:0.1s;
+}
+
+#userMenu{
+	left:50%;
+	transform: translateX(300px);
+	z-index:10;
+	border-radius:0px 0px 10px 10px;
+	height:0;
+}
+
+#userMenu.visible{
+	height:165px;
+}
+
+.dropDown li:hover{
+	opacity:0.9;
+	box-shadow:0px 1px 0px #ccc;
 }

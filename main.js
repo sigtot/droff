@@ -19,6 +19,11 @@ var app 				= document.getElementById("appE");
 var user 				= document.getElementById("userE");
 var loggedInText		= document.getElementById("loggedInText");
 var userNameMenu		= document.getElementById("userName");
+var userMenu 			= document.getElementById("userMenu");
+var menuFriends			= document.getElementById("menuFriends");
+var menuDroffs			= document.getElementById("menuDroffs");
+var menuSettings		= document.getElementById("menuSettings");
+var menuLogout			= document.getElementById("menuLogout");
 // Brush settings
 var preview 		= document.getElementById("preview");
 var brushSizeRange 	= document.getElementById("brushSizeRange");
@@ -37,6 +42,8 @@ var colors = [
 	"#FF5722", "#795548", "#607D8B"];
 
 /* Booleans */
+loggedIn = false;
+
 // Global variables uten verdi
 var colorButtons;
 var signUpPassReady, signUpUserReady, signUpEmailReady, loginUserReady, loginPassReady;
@@ -44,7 +51,7 @@ var badUser, badEmail;
 
 /* Tall og verdier */
 
-var loggedInUser = "Not logged in"
+var loggedInUser = "Not logged in";
 
 /* Andre variabler */
 var ref = new Firebase("https://droff.firebaseio.com/");
@@ -82,6 +89,12 @@ function getCookie(cName){
     }
 }
 
+// Sletter cookies
+function deleteCookie(cName) {
+	// Sett expiration date til fortiden
+	document.cookie = cName + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
 // Resume session
 function resumeSession(){
 	var currentCookie = getCookie("sessioncookie");
@@ -105,9 +118,7 @@ function resumeSession(){
 		}else{
 			// User is not logged in
 			if(msg == "fail"){
-				loggedInText.innerHTML = "Not logged in";
 			}else{
-				loggedInText.innerHTML= msg;
 			}
 		}
 		});
@@ -136,6 +147,10 @@ function setColors(){
 
 // Kjører når alt loader
 window.onload = makeColors(), setColors(), resumeSession(), checkUrl();
+
+/*--------------------------------------------
+				Funksjonalitet
+---------------------------------------------*/
 
 // Jquery :D
 $("div").click(function() {
@@ -357,6 +372,7 @@ function enterCheck(event){
 	}
 }
 
+// Start en session
 enterGuest.onclick = function(){
 	createSession("guest");
 }
@@ -470,3 +486,41 @@ function noDisplay(element){
 	}
 }
 
+toggleUserNameMenu = function(){
+	if(userMenu.className.indexOf("visible") >= 0){
+		userMenu.className = "dropDown box";
+	}else{
+		userMenu.className = "dropDown box visible";
+	}
+	//userMenu.className = "visible dropDown box";
+}
+userNameMenu.onclick = toggleUserNameMenu;
+
+menuLogout.onclick = logOut;
+function logOut(){
+	// Hent cookie
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// Cookie finnes
+		var cookieSplit = currentCookie.split(",");
+		var token = cookieSplit[1];
+
+		// Fjern cookie fra DB
+		$.ajax({
+			type: "POST",
+			url: "destroysession.php",
+			data: {token: token} // Variable token sendes med navn "token" til php
+			}).done(function( msg ) {
+			// Done! Session finnes ikke lengre
+			deleteCookie("sessioncookie");
+			logOutPage();
+		});
+	}
+}
+
+function logOutPage(){
+	window.location.hash = "splash";
+	loggedInUser = "Not logged in";
+	userNameMenu = loggedInUser;
+	toggleUserNameMenu();
+}
