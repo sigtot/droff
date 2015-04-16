@@ -18,8 +18,7 @@ var splash				= document.getElementById("splashE");
 var app 				= document.getElementById("appE");
 var user 				= document.getElementById("userE");
 var loggedInText		= document.getElementById("loggedInText");
-
-
+var userNameMenu		= document.getElementById("userName");
 // Brush settings
 var preview 		= document.getElementById("preview");
 var brushSizeRange 	= document.getElementById("brushSizeRange");
@@ -44,6 +43,8 @@ var signUpPassReady, signUpUserReady, signUpEmailReady, loginUserReady, loginPas
 var badUser, badEmail;
 
 /* Tall og verdier */
+
+var loggedInUser = "Not logged in"
 
 /* Andre variabler */
 var ref = new Firebase("https://droff.firebaseio.com/");
@@ -260,8 +261,9 @@ function signUp(){
 	        data: { username: signUpUser.value, email: signUpEmail.value, password: signUpPass.value}
 	        }).done(function( msg ) {
 	        if(msg == "success"){
-	            alert("Welcome " + signUpUser.value);
+	        	// Brukeren ble signet opp
 	            createSession(signUpUser.value);
+	            loginPage();
 	        }else{
 	        	// Brukernavnet finnes
 	            if(msg == "userExists"){
@@ -324,7 +326,7 @@ function login(){
 				// Successfully logged in
 				createSession(msgSplit[1]);
 
-				location.hash = "user";
+				loginPage();
 				
 			}else{
 				if(msg == "fail"){
@@ -396,9 +398,18 @@ function createSession(user){
 	});
 }
 
+// There is a user logged in
 function loginPage(){
 	//loginContainer.style.top = "-600px";
 	//orGuest.style.top = "-200px";
+
+	// Get the current logged in username
+	var currentCookie = getCookie("sessioncookie");
+	loggedInUser = currentCookie.split(",")[0];
+
+	window.location.hash = "user";
+	userNameMenu.innerHTML = loggedInUser;
+
 }
 
 // Change page
@@ -458,3 +469,4 @@ function noDisplay(element){
 		splash.style.pointerEvents = "all";
 	}
 }
+

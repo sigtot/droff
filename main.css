@@ -530,3 +530,33 @@ input[type="range"]:focus{
 .gameMode:hover .gameModeIcon{
 	top:-10px;
 }
+
+#userName{
+	display:inline-block;
+	position:relative;
+	left:50%;
+	transform: translateX(300px);
+	font-weight:300;
+	color:#333;
+	font-size:30px;
+	line-height:60px;
+	top:0;
+	cursor:pointer;
+}
+
+#userName:after{
+	display:inline-block;
+	position:relative;
+	content:"";
+	left:10px;
+	top:12px;
+	width:25px;
+	height:25px;
+	background: transparent url('img/icons/arrowDown.png') no-repeat;
+	background-size:25px;
+	transition:0.2s;
+}
+
+#userName:hover:after{
+	top:15px;
+}
