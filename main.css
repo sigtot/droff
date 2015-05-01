@@ -440,6 +440,14 @@ input[type="range"]:focus{
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
 }
 
+#loginContainer button.ready:active{
+	opacity:0.9;
+}
+
+#loginContainer button.working{
+	
+}
+
 .error{
 	background:#FFD9D9 !important;
 }
