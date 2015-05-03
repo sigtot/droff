@@ -280,6 +280,7 @@ input[type="range"]:focus{
 	font-family:Source Sans Pro;
 	font-size:14px;
 	transition:0.5s;
+	font-weight:500;
 }
 
 #loginContainer input:focus{
@@ -552,9 +553,11 @@ input[type="range"]:focus{
 	cursor:pointer;
 	width:200px;
 	margin-left:15px;
+	pointer-events:none;
 }
 
-#userName:after{
+/*Arrow after username*/
+/*#userName:after{
 	display:inline-block;
 	position:relative;
 	content:"";
@@ -565,10 +568,14 @@ input[type="range"]:focus{
 	background: transparent url('img/icons/arrowDown.png') no-repeat;
 	background-size:25px;
 	transition:0.2s;
-}
+}*/
 
 #userName:hover{
 	opacity:0.9;
+}
+
+#userName.enabled{
+	pointer-events:all !important;
 }
 
 .dropDown{
@@ -577,6 +584,7 @@ input[type="range"]:focus{
 	position:absolute;
 	overflow:hidden;
 	transition:0.2s;
+	z-index:5;
 }
 
 .dropDown li, .dropDown ul{
@@ -612,4 +620,24 @@ input[type="range"]:focus{
 .dropDown li:hover{
 	opacity:0.9;
 	box-shadow:0px 1px 0px #ccc;
+}
+
+#notDropDown{
+	position:fixed;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	z-index:0;
+	display:none;
+}
+
+#notDropDown.visible{
+	display:block;
+}
+
+#findingE{
+	opacity:0;
+	pointer-events:none;
+	transition:0.5s;
 }

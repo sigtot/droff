@@ -14,21 +14,26 @@ if ($conn->connect_error) {
 }
 
 // Post cookie contents
-$user = $_POST["username"];
 $token = $_POST["token"];
+$gamemode = $_POST["gamemode"];
+$user = $_POST["user"];
 
-$user = mysqli_real_escape_string($conn, $user);
 $token = mysqli_real_escape_string($conn, $token);
+$gamemode = mysqli_real_escape_string($conn, $gamemode);
+$user = mysqli_real_escape_string($conn, $user);
 
 // Check if index exists in table
-$result = $conn->query("SELECT * FROM sessions WHERE users_username = '$user' AND token = '$token'");
+$result = $conn->query("SELECT * FROM matchmaking WHERE sessions_token = '$token'");
 $row = mysqli_fetch_row($result);
 
 if(empty($row[0])){
-	// User does not get logged in
-	echo "fail";
-}else{
-	// User gets logged in
+	// Session does not exist
+	$sql = "INSERT INTO matchmaking VALUES ('$gamemode', '$user', '$token', NULL)";
+	$result = $conn->query($sql);
+
 	echo "success";
+}else{
+	// Session exists
+	echo "fail";
 }
 ?>

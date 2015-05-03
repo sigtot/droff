@@ -17,18 +17,24 @@ var orGuest				= document.getElementById("orGuest");
 var splash				= document.getElementById("splashE");
 var app 				= document.getElementById("appE");
 var user 				= document.getElementById("userE");
+var finding 			= document.getElementById("findingE");
 var loggedInText		= document.getElementById("loggedInText");
 var userNameMenu		= document.getElementById("userName");
 var userMenu 			= document.getElementById("userMenu");
+var notDropDown			= document.getElementById("notDropDown");
 var menuFriends			= document.getElementById("menuFriends");
 var menuDroffs			= document.getElementById("menuDroffs");
 var menuSettings		= document.getElementById("menuSettings");
 var menuLogout			= document.getElementById("menuLogout");
+
 // Brush settings
 var preview 		= document.getElementById("preview");
 var brushSizeRange 	= document.getElementById("brushSizeRange");
 var settingButtons 	= document.getElementById("settingButtons");
 var settingButton 	= document.getElementsByClassName("settingButton");
+
+// User page
+var strangerIcon 		= document.getElementById("strangerIcon");
 
 /* Arrayer */
 var colors = [
@@ -42,7 +48,7 @@ var colors = [
 	"#FF5722", "#795548", "#607D8B"];
 
 /* Booleans */
-loggedIn = false;
+var polling = false;
 
 // Global variables uten verdi
 var colorButtons;
@@ -92,7 +98,7 @@ function getCookie(cName){
 // Sletter cookies
 function deleteCookie(cName) {
 	// Sett expiration date til fortiden
-	document.cookie = cName + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	document.cookie = cName + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
 }
 
 // Resume session
@@ -118,6 +124,7 @@ function resumeSession(){
 		}else{
 			// User is not logged in
 			if(msg == "fail"){
+				logOut();
 			}else{
 			}
 		}
@@ -145,8 +152,16 @@ function setColors(){
 	};
 }
 
+function checkUserName(){
+	if(userNameMenu.innerHTML == "Not logged in"){
+		userNameMenu.className = "";
+	}else{
+		userNameMenu.className = "enabled";
+	}
+}
+
 // Kjører når alt loader
-window.onload = makeColors(), setColors(), resumeSession(), checkUrl();
+window.onload = makeColors(), setColors(), resumeSession(), checkUrl(), checkUserName();
 
 /*--------------------------------------------
 				Funksjonalitet
@@ -245,6 +260,9 @@ function checkSignUpFields(){
 loginUser.oninput = checkLoginFields;
 loginPass.oninput = checkLoginFields;
 function checkLoginFields(){
+	loginUser.className ="loginInput";
+	loginPass.className ="loginInput";
+
     if(loginUser.value.length > 0){
         loginUserReady = true;
     }else{
@@ -303,7 +321,7 @@ function signUp(){
 
 	            // Error
 	            if(msg == "fail"){
-	            	alert("Somthing went wrong, try again");
+	            	alert("Something went wrong, try again");
 	            	return;
 	            }
 
@@ -345,7 +363,8 @@ function login(){
 				
 			}else{
 				if(msg == "fail"){
-					alert("Wrong username or password, try again");
+					loginUser.className ="loginInput error";
+					loginPass.className ="loginInput error";
 				}else{
 					alert("Something went wrong, try again");
 				}
@@ -355,11 +374,12 @@ function login(){
 	}
 }
 
-// Sjekk om enter presses inne i forms
-document.onkeypress = enterCheck;
+// Sjekk for keypress
+document.onkeyup = enterCheck;
 function enterCheck(event){
 	// Enter ble presset
 	if(event.keyCode == 13){
+		// Sjekk om enter presses inne i forms
 		// Brukeren logger inn
 		if(event.target.id == "loginUser" || event.target.id == "loginPass"){
 			login();
@@ -369,6 +389,10 @@ function enterCheck(event){
 		if(event.target.id == "signUpUser" || event.target.id == "signUpEmail" || event.target.id == "signUpPass"){
 			signUp();
 		}
+	}
+
+	if(event.keyCode == 27){
+		hideUserNameMenu();
 	}
 }
 
@@ -414,6 +438,91 @@ function createSession(user){
 	});
 }
 
+// Add to matchmaking queue
+strangerIcon.onclick = function(){
+	startGame("duo");
+}
+
+function startGame(gameMode){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// There is a cookie
+		var cookieSplit = currentCookie.split(",");
+
+		var user = cookieSplit[0];
+		var token = cookieSplit[1];
+
+		// Check if the cookie has a corresponding session
+		$.ajax({
+		type: "POST",
+		url: "startgame.php",
+		data: {token: token, gamemode: gameMode, user: user}
+		}).done(function( msg ) {
+		var msgSplit = msg.split(",");
+		if(msg == "success"){
+			// User is logged in
+			alert("success");
+			window.location.hash = "#finding";
+			//poll();
+			//polling = true;
+		}else{
+			// User is not logged in
+			alert(msg);
+			if(msg == "fail"){
+				alert("fail");
+			}else{
+			}
+		}
+		});
+
+	}else{
+		// No current session
+	}
+}
+
+setInterval(function(){ 
+	if(polling == true){
+		poll();
+	}
+}, 10000);
+
+// Poll for avaliable game
+function poll(){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// There is a cookie
+		var cookieSplit = currentCookie.split(",");
+
+		var user = cookieSplit[0];
+		var token = cookieSplit[1];
+
+		// Check if the cookie has a corresponding session
+		$.ajax({
+		type: "POST",
+		url: "poll.php",
+		data: {token: token, user: user}
+		}).done(function( msg ) {
+		var msgSplit = msg.split(",");
+		if(msg == "success"){
+			// Matched!
+			alert("success");
+			
+		}else{
+			// Still waiting
+			if(msg == "fail"){
+				alert("waiting");
+			}else{
+				alert(msg);
+			}
+		}
+		});
+
+	}else{
+		// No current session
+	}
+}
+
+
 // There is a user logged in
 function loginPage(){
 	//loginContainer.style.top = "-600px";
@@ -425,7 +534,7 @@ function loginPage(){
 
 	window.location.hash = "user";
 	userNameMenu.innerHTML = loggedInUser;
-
+	checkUserName();
 }
 
 // Change page
@@ -441,6 +550,9 @@ function checkUrl(){
 	splash.style.opacity = "0";
 	splash.style.pointerEvents = "none";
 	
+	finding.style.opacity = "0";
+	finding.style.pointerEvents = "none";
+
 	// Show element
 	if(window.location.hash == "#app"){
 		app.style.display = "block";
@@ -453,10 +565,15 @@ function checkUrl(){
 		user.style.display = "block";
 		setTimeout(function(){ noDisplay(user); }, 0);
 	}
-
-	if(window.location.hash == "#splash"){
+	// Also show splash if there's no hash
+	if(window.location.hash == "#splash" || window.location.hash == ""){
 		splash.style.display = "block";
 		setTimeout(function(){ noDisplay(splash); }, 0);
+	}
+
+	if(window.location.hash == "#finding"){
+		finding.style.display = "block";
+		setTimeout(function(){ noDisplay(finding); }, 0);
 	}
 }
 
@@ -484,17 +601,34 @@ function noDisplay(element){
 		splash.style.opacity = "100";
 		splash.style.pointerEvents = "all";
 	}
+
+	// Dont show unless true
+	if(element.id != "findingE"){
+		finding.style.display = "none";
+	}else{
+		finding.style.opacity = "100";
+		finding.style.pointerEvents = "all";
+	}
 }
 
 toggleUserNameMenu = function(){
 	if(userMenu.className.indexOf("visible") >= 0){
 		userMenu.className = "dropDown box";
+		notDropDown.className = "";
 	}else{
 		userMenu.className = "dropDown box visible";
+		notDropDown.className = "visible";
 	}
 	//userMenu.className = "visible dropDown box";
 }
 userNameMenu.onclick = toggleUserNameMenu;
+notDropDown.onclick = toggleUserNameMenu;
+
+hideUserNameMenu = function(){
+	if(userMenu.className.indexOf("visible") >= 0){
+		toggleUserNameMenu();
+	}
+}
 
 menuLogout.onclick = logOut;
 function logOut(){
@@ -521,6 +655,7 @@ function logOut(){
 function logOutPage(){
 	window.location.hash = "splash";
 	loggedInUser = "Not logged in";
-	userNameMenu = loggedInUser;
-	toggleUserNameMenu();
+	userNameMenu.innerHTML = loggedInUser;
+	hideUserNameMenu();
+	checkUserName();
 }
