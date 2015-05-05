@@ -29,7 +29,9 @@ $user = mysqli_real_escape_string($conn, $user);
 $result = $conn->query("SELECT gameid 
 	FROM games
 	GROUP BY gameid
-	HAVING COUNT(gameid) < 2");
+	HAVING COUNT(gameid) < 2
+	ORDER BY RAND()
+	LIMIT 1");
 $row = mysqli_fetch_row($result);
 $ledigid = $row[0];
 
@@ -45,13 +47,13 @@ if(empty($ledigid)){
 	$sql = "INSERT INTO games VALUES ('$newgameid', '$id')";
 	$result = $conn->query($sql);
 
-	echo $id .",". $ledigid .",". $newgameid . ",made";
+	echo "poll";
 }else{
 	// Det er noen som søker
 
 	// Lag ny rad i games
 	$sql = "INSERT INTO games VALUES ('$ledigid', '$id')";
 	$result = $conn->query($sql);
-	echo $id .",". $ledigid . ",added";
+	echo "success";
 }
 ?>

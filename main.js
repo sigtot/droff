@@ -460,16 +460,14 @@ function startGame(gameMode){
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
 		if(msg == "success"){
-			// User is logged in
-			alert("success");
-			window.location.hash = "#finding";
-			//poll();
-			//polling = true;
+			// There is a session - game starts right away
+			alert("game is starting");
 		}else{
-			// User is not logged in
-			alert(msg);
-			if(msg == "fail"){
-				alert("fail");
+			// There is no session - has to poll for another player
+			if(msg == "poll"){
+				window.location.hash = "#finding";
+				poll();
+				polling = true;
 			}else{
 			}
 		}
@@ -500,9 +498,9 @@ function poll(){
 		$.ajax({
 		type: "POST",
 		url: "poll.php",
-		data: {token: token, user: user}
+		data: {user: user}
 		}).done(function( msg ) {
-		var msgSplit = msg.split(",");
+		//var msgSplit = msg.split(",");
 		if(msg == "success"){
 			// Matched!
 			alert("success");

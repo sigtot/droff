@@ -15,58 +15,28 @@ if ($conn->connect_error) {
 
 // Post cookie contents
 $user = $_POST["user"];
-$token = $_POST["token"];
 
 $user = mysqli_real_escape_string($conn, $user);
-$token = mysqli_real_escape_string($conn, $token);
 
-// Fetch gamemode
-$result = $conn->query("SELECT * FROM matchmaking WHERE sessions_token = '$token'");
+// Start spill hvis vi finner en rad med vår gameid men ikke vårt navn
+// Altså en annen spiller
+
+// Denne sql spørringen velger brukernavn,
+// lager en join for lik gameid,
+// begrenser resultatet til kun de gameidene som er lik vår egen gameid,
+// som igjen må hentes gjennom en join
+$result = $conn->query("SELECT users.username
+	FROM users
+	INNER JOIN games
+	ON games.users_id=users.id
+	WHERE games.gameid = 
+		(SELECT games.gameid 
+		FROM games
+		INNER JOIN users
+		ON games.users_id=users.id
+		WHERE users.username = '$user')
+	AND users.username <> '$user'");
 $row = mysqli_fetch_row($result);
+echo "Matched with " . $row[0];
 
-$gamemode = $row[0];
-
-// Sjekk etter flere enn 2 spillere i matchmaking
-$result = $conn->query("SELECT COUNT(*) FROM matchmaking WHERE gamemode = '$gamemode'");
-$row = mysqli_fetch_row($result);
-
-$amount = $row[0];
-
-// Det finnes en annen bruker som søker
-if($amount >= 2){
-	// Fetch token til en tilfeldig partner
-	$result = $conn->query("SELECT sessions_token, sessions_users_username
-		FROM matchmaking 
-		WHERE gamemode = '$gamemode' AND sessions_token <> '$token'
-		ORDER BY RAND() 
-		LIMIT 1");
-	$row = mysqli_fetch_row($result);
-	$partnertoken = $row[0];
-
-	// Generer firebase key
-	$firebasekey = "dummy";
-
-	// Finn usernames
-	$partneruser = 	$row[1];
-	// Legg til deg og partneren i games
-
-	// Vi vet ikke om denne sqlen går gjennom eller ikke
-	// Hvis noen andre har lagt oss til i games tidligere,
-	// skjer ingenting
-	$sql = "INSERT INTO games VALUES ('$user', '$token', '$partneruser', '$partnertoken', '$firebasekey')";
-	$result = $conn->query($sql);
-
-	if(!$result){
-		echo "no";
-	}else{
-		echo "yes";
-	}
-	
-}
-
-// Sjekk etter token i games
-
-// Update timestamp
-
-// Echo msg
 ?>
