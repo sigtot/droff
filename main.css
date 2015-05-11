@@ -652,4 +652,62 @@ input[type="range"]:focus{
 	position:relative;
 	box-shadow:0px 5px 10px rgba(0,0,0,0.1), 0px 4px 4px -4px rgba(0,0,0,0.5);
 	margin-top:500px;
+	padding-top:50px;
+	padding-bottom:30px;
+}
+
+#userContainer .wrapper{
+	margin-left:100px;
+	margin-right:100px;
+}
+
+#userContainer h2{
+	font-size:40px;
+	color:#333;
+	font-weight:300;
+}
+
+#userContainer h3{
+	font-size:25px;
+	color:#333;
+	font-weight:300;
+}
+
+#settingsAvatar{
+	height:400px;
+	border-radius:10px;
+	transition:0.3s;
+}
+
+#avatarWrapper{
+	background:#333;
+	height:400px;
+	width:400px;
+	border-radius:13px;
+	position:relative;
+	text-align:center;
+}
+
+#settingsAvatar:hover{
+	opacity:0.5;
+	-webkit-filter:blur(2px);
+	filter:blur(2px);
+}
+
+#avatarWrapper:after{
+	content:"Upload a new avatar";
+	opacity:0;
+	transition:0.3s;
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	color:#fff;
+	pointer-events:none;
+	font-size:30px;
+	line-height:400px;
+}
+
+#avatarWrapper:hover:after{
+	opacity:1;
 }
