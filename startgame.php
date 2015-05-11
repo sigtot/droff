@@ -39,9 +39,14 @@ if(empty($ledigid)){
 	// ingen søker
 
 	// Lager ny gameid
-	$result = $conn->query("SELECT MAX(gameid) FROM games");
-	$row = mysqli_fetch_row($result);
-	$newgameid = $row[0] + 1;
+	
+	// Game id inkrementerer
+	//$result = $conn->query("SELECT MAX(gameid) FROM games");
+	//$row = mysqli_fetch_row($result);
+	//$newgameid = $row[0] + 1;
+
+	// Game id er random
+	$newgameid = rand(10000,99999);
 
 	// Lag ny rad i games
 	$sql = "INSERT INTO games VALUES ('$newgameid', '$id')";
@@ -54,6 +59,6 @@ if(empty($ledigid)){
 	// Lag ny rad i games
 	$sql = "INSERT INTO games VALUES ('$ledigid', '$id')";
 	$result = $conn->query($sql);
-	echo "success";
+	echo "success," . $ledigid;
 }
 ?>

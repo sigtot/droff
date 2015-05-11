@@ -58,12 +58,12 @@ var badUser, badEmail;
 /* Tall og verdier */
 
 var loggedInUser = "Not logged in";
+var currentFirebase = "p";
 
 /* Andre variabler */
+
 var ref = new Firebase("https://droff.firebaseio.com/");
-
-
-
+var drawRef = ref.child("p");
 /*--------------------------------------------
 		Onload functions og snippets
 ---------------------------------------------*/
@@ -99,6 +99,14 @@ function getCookie(cName){
 function deleteCookie(cName) {
 	// Sett expiration date til fortiden
 	document.cookie = cName + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
+}
+
+// Legg til js
+function addJsFile(filename){
+	var fileref=document.createElement('script');
+	fileref.setAttribute("type","text/javascript");
+	fileref.setAttribute("src", filename);
+	document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 
 // Resume session
@@ -426,7 +434,6 @@ function createSession(user){
 			if(msg == "fail"){
 				alert("error");
 			}else{
-				alert(msg);
 			}
 		}
 		/*// Fjern metadata etter semicolon
@@ -459,9 +466,21 @@ function startGame(gameMode){
 		data: {token: token, gamemode: gameMode, user: user}
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
-		if(msg == "success"){
+		if(msgSplit[0] == "success"){
 			// There is a session - game starts right away
-			alert("game is starting");
+			//alert("gameid is " + msgSplit[1]);
+
+			//ref.set({msgSplit[1]});
+
+			ref.child(msgSplit[1]).set({
+				placeholder: "placeholder2"
+			});
+			drawRef = new Firebase("https://droff.firebaseio.com/" + msgSplit[1]);
+			currentFirebase = msgSplit[1];
+			window.location.hash = "#app";
+
+			// Add draw.js
+			addJsFile("draw.js");
 		}else{
 			// There is no session - has to poll for another player
 			if(msg == "poll"){
@@ -500,17 +519,25 @@ function poll(){
 		url: "poll.php",
 		data: {user: user}
 		}).done(function( msg ) {
-		//var msgSplit = msg.split(",");
-		if(msg == "success"){
+		var msgSplit = msg.split(",");
+		if(msgSplit[0] == "matched"){
 			// Matched!
-			alert("success");
-			
+			//alert("Matched with gameid " + msgSplit[1]);
+			//ref.set({msgSplit[1]});
+			ref.child(msgSplit[1]).set({
+				placeholder: "placeholder"
+			});
+			drawRef = new Firebase("https://droff.firebaseio.com/" + msgSplit[1]);
+			window.location.hash = "#app";
+			polling = false;
+
+			// Add draw.js
+			addJsFile("draw.js");
 		}else{
 			// Still waiting
 			if(msg == "fail"){
 				alert("waiting");
 			}else{
-				alert(msg);
 			}
 		}
 		});

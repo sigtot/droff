@@ -25,7 +25,7 @@ $user = mysqli_real_escape_string($conn, $user);
 // lager en join for lik gameid,
 // begrenser resultatet til kun de gameidene som er lik vår egen gameid,
 // som igjen må hentes gjennom en join
-$result = $conn->query("SELECT users.username
+$result = $conn->query("SELECT users.username,games.gameid
 	FROM users
 	INNER JOIN games
 	ON games.users_id=users.id
@@ -37,6 +37,11 @@ $result = $conn->query("SELECT users.username
 		WHERE users.username = '$user')
 	AND users.username <> '$user'");
 $row = mysqli_fetch_row($result);
-echo "Matched with " . $row[0];
+
+if(empty($row[0])){
+
+}else{
+	echo "matched," . $row[1];
+}
 
 ?>

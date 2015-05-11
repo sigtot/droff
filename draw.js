@@ -30,34 +30,13 @@ context.fillStyle = strokeColor; // Set the fill to the same color as the stroke
 
 
 // Setting initial conditions
-ref.set({
-      drawing2: {
+
+
+/*ref.set({
+      drawing3: {
 
       }
-});
-
-var drawRef = ref.child("drawing2");
-
-drawRef.on("child_added", function(snapshot) {
-      var message = snapshot.val();
-      context.beginPath();
-      for (var i = 0; i < message.lineX.length; i++) {
-            if(i >= 1){
-                  var xMid = message.lineX[i - 1] + (message.lineX[i] - message.lineX[i - 1]) / 2;
-                  var yMid = message.lineY[i - 1] + (message.lineY[i] - message.lineY[i - 1]) / 2;
-                  context.quadraticCurveTo(message.lineX[i - 1], message.lineY[i - 1], xMid, yMid)
-            }else{
-                 context.arc(message.lineX, message.lineY, 1, 0, 2 * Math.PI);
-            }  
-            //console.log(message.lineX[i]);
-            //console.log(message.lineY[i]);
-      };
-      context.lineWidth = message.strokeWidth;
-      context.strokeStyle = message.strokeColor;
-      context.stroke();
-});
-
-
+});*/
 
 canvas.onmousedown = function(event){
       //Starts drawing
@@ -169,3 +148,22 @@ function toggleCursor(){
             cursor.style.display = "block";
       }
 }
+
+drawRef.on("child_added", function(snapshot) {
+      var message = snapshot.val();
+      context.beginPath();
+      for (var i = 0; i < message.lineX.length; i++) {
+            if(i >= 1){
+                  var xMid = message.lineX[i - 1] + (message.lineX[i] - message.lineX[i - 1]) / 2;
+                  var yMid = message.lineY[i - 1] + (message.lineY[i] - message.lineY[i - 1]) / 2;
+                  context.quadraticCurveTo(message.lineX[i - 1], message.lineY[i - 1], xMid, yMid)
+            }else{
+                 context.arc(message.lineX, message.lineY, 1, 0, 2 * Math.PI);
+            }  
+            //console.log(message.lineX[i]);
+            //console.log(message.lineY[i]);
+      };
+      context.lineWidth = message.strokeWidth;
+      context.strokeStyle = message.strokeColor;
+      context.stroke();
+});
