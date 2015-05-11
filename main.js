@@ -35,6 +35,7 @@ var settingButton 	= document.getElementsByClassName("settingButton");
 
 // User page
 var strangerIcon 		= document.getElementById("strangerIcon");
+var fileInput 			= document.getElementById("fileInput");
 
 /* Arrayer */
 var colors = [
@@ -683,4 +684,24 @@ function logOutPage(){
 	userNameMenu.innerHTML = loggedInUser;
 	hideUserNameMenu();
 	checkUserName();
+}
+
+fileInput.onclick = imageUpload;
+function imageUpload(){
+	var currentCookie = getCookie("sessioncookie");
+	var token = currentCookie.split(",")[1];
+	$.ajax({
+		type: "POST",
+		url: "upload.php",
+		data: {file: fileInput.files[0], token: token} // Filen sendes til php
+		}).done(function( msg ) {
+		// Done! Session finnes ikke lengre
+		
+		if(msg == "uploaded"){
+			alert("wow good");
+		}else{
+			alert(msg)
+		}
+		
+	});
 }
