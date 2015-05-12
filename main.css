@@ -675,6 +675,14 @@ input[type="range"]:focus{
 
 #settingsAvatar{
 	height:400px;
+	
+	margin-left:200px;
+	-webkit-transform:translateX(-50%);
+	transform:translateX(-50%);
+
+	-webkit-transform-origin:50% left;
+	transform-origin:50% left;
+
 	transition:opacity 0.3s, filter 0.3s, transform 0.1s;
 	-webkit-transition:-webkit-opacity 0.3s, -webkit-filter 0.3s, -webkit-transform 0.1s;
 }
@@ -686,22 +694,26 @@ input[type="range"]:focus{
 	text-align:center;
 	overflow:hidden;
 	cursor:pointer;
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+	border-radius:10px;
 	box-shadow: 0px 1px 2px rgba(0,0,0,0.3), 0px 0px 1px rgba(0,0,0,0.1);
 }
 
 #avatarWrapper:hover #settingsAvatar{
-	-webkit-opacity:0.6;
-	opacity:0.6;
-	-webkit-filter:blur(2px) saturate(0.7);
-	filter:blur(2px) saturate(0.7);
-	-webkit-transform:scale(1.1,1.1);
-	transform:scale(1.1,1.1);
+	-webkit-opacity:0.8;
+	opacity:0.8;
+	-webkit-filter:blur(2px) saturate(0.8);
+	filter:blur(2px) saturate(0.8);
+	-webkit-transform:scale(1.1,1.1) translateZ(0) translateX(-50%);
+	transform:scale(1.1,1.1) translateZ(0) translateX(-50%);
 }
 
-#avatarWrapper:after{
+#avatarWrapper:before{
 	content:"Upload a new avatar";
 	opacity:0;
 	transition:0.3s;
+	webkit-transition:0.3s;
 	position:absolute;
 	top:0px;
 	left:0px;
@@ -710,9 +722,11 @@ input[type="range"]:focus{
 	pointer-events:none;
 	font-size:30px;
 	line-height:400px;
+	z-index:5;
+	margin-top:-10px;
 }
 
-#avatarWrapper:hover:after{
+#avatarWrapper:hover:before{
 	opacity:1;
 }
 
@@ -738,4 +752,24 @@ input[type="range"]:focus{
 	width:400px;
 	opacity:0;
 	cursor:pointer;
+}
+
+#avatarWrapper:after{
+	content: "+";
+	position:absolute;
+	top:50%;
+	left:50%;
+	color:#fff;
+	font-size:50px;
+	font-weight:200;
+	transform:translateX(-50%);
+	-webkit-transform:translateX(-50%);
+	opacity:0;
+	transition:0.3s;
+	-webkit-transition:0.3s;
+	pointer-events:none;
+}
+
+#avatarWrapper:hover:after{
+	opacity:1;
 }

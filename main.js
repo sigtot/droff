@@ -36,6 +36,7 @@ var settingButton 	= document.getElementsByClassName("settingButton");
 // User page
 var strangerIcon 		= document.getElementById("strangerIcon");
 var fileInput 			= document.getElementById("fileInput");
+var settingsAvatar 		= document.getElementById("settingsAvatar");
 
 /* Arrayer */
 var colors = [
@@ -686,14 +687,43 @@ function logOutPage(){
 	checkUserName();
 }
 
-fileInput.onclick = imageUpload;
+fileInput.onchange = imageUpload;
 function imageUpload(){
 	var currentCookie = getCookie("sessioncookie");
-	var token = currentCookie.split(",")[1];
+	var cookieSplit = currentCookie.split(",");
+	var token = cookieSplit[1];
+
+	var file_data = $('#fileInput').prop("files")[0];   
+	var form_data = new FormData();                  
+
+	var extension = file_data.name.split('.').pop();
+
+	form_data.append("file", file_data);
+	form_data.append("token", token);
+	form_data.append("extension", extension);
 	$.ajax({
+		url: "upload.php",
+		dataType: "text",
+		cache: false,
+		contentType: false,
+		processData: false,
+		data: form_data,                         
+		type: "post",
+		success: function(msg){
+			if(msg == "wrong"){
+			}else{
+				if(msg == "large"){
+				}else{
+				settingsAvatar.src = msg + "?" + new Date().getTime();
+				}
+			}
+		}
+	});
+
+	/*$.ajax({
 		type: "POST",
 		url: "upload.php",
-		data: {file: fileInput.files[0], token: token} // Filen sendes til php
+		data: { token: token, name: fileInput.value} // Filen sendes til php
 		}).done(function( msg ) {
 		// Done! Session finnes ikke lengre
 		
@@ -703,5 +733,5 @@ function imageUpload(){
 			alert(msg)
 		}
 		
-	});
+	});*/
 }
