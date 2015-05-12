@@ -24,11 +24,28 @@ $token = mysqli_real_escape_string($conn, $token);
 $result = $conn->query("SELECT * FROM sessions WHERE users_username = '$user' AND token = '$token'");
 $row = mysqli_fetch_row($result);
 
+// Get avatar
+$result = $conn->query("SELECT users_id, extension
+	FROM avatar
+	INNER JOIN users
+	ON avatar.users_id=users.id
+	WHERE users.id =  
+		(SELECT users.id 
+		FROM users
+		INNER JOIN sessions
+		ON users.username =sessions.users_username
+		WHERE sessions.token = '$token')");
+$rew = mysqli_fetch_row($result);
+
 if(empty($row[0])){
 	// User does not get logged in
 	echo "fail";
 }else{
 	// User gets logged in
-	echo "success";
+	if(empty($rew[0])){
+		echo "success";
+	}else{
+		echo "success,". $rew[0] . "." . $rew[1]; // Eks. "success,2.png"
+	}
 }
 ?>

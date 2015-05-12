@@ -52,7 +52,7 @@ if($rightType && $rightSize){
 	}
 
 	// Send image info to database - alternatively at another time?
-	$sql = "INSERT INTO extension (extension, users_id) 
+	$sql = "INSERT INTO avatar (extension, users_id) 
 		VALUES ('$extension', '$id') 
 		ON DUPLICATE KEY 
 		UPDATE extension = VALUES (extension)";

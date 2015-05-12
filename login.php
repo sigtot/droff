@@ -23,11 +23,18 @@ $pass = mysqli_real_escape_string($conn, $pass);
 $result = $conn->query("SELECT * FROM users WHERE username = '$user' OR email = '$user'");
 $row = mysqli_fetch_row($result);
 
+$result = $conn->query("SELECT extension FROM avatar WHERE users_id = '$row[0]'");
+$rew = mysqli_fetch_row($result);
+
 // Verify password matches
 $passDB = $row[2];
 
 if (password_verify($pass, $passDB)) {
-    echo 'success,' . $row[1];
+    if(empty($rew[0])){
+        echo 'success,' . $row[1];
+    }else{
+        echo 'success,' . $row[1] . "," . $row[0] . "." . $rew[0]; // Eks. "success,sigtot,2.png"
+    }
     //echo "<script type='text/javascript'>alert('Welcome back " . $user . ".')</script>";
 } else {
     echo 'fail';

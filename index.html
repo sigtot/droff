@@ -6,9 +6,11 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script src="jquery.min.js"></script>
-		<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="img/icons/favicon.ico" type="image/x-icon" /> 
+		<link rel="shortcut icon" href="img/icons/favicon.ico" type="image/x-icon" />
+		<link rel="icon" type="image/png" href="img/favicon.png">
 		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700' rel='stylesheet' type='text/css'>
-		<meta name="theme-color" content="#96031a">
+		<meta name="theme-color" content="#01579B">
 		<script src="https://cdn.firebase.com/js/client/2.2.3/firebase.js"></script>
 		<title>Droff - Draw with your friends</title>
 	</head>
@@ -17,7 +19,10 @@
 		<img id="hero" src="img/blueBlur.jpg" class="widthIsSmallest">
 		
 		<div id="navBar">
-			<h3 id="userName">Not logged in</h3>
+			<div id="userNameContainer">
+				<h3 id="userName">Not logged in</h3>
+				<img id="tinyAvatar" src="img/icons/avatar.png">
+			</div>
 			<div id="userMenu" class="dropDown box">
 				<ul>
 					<li id="menuFriends">Friends</li>
@@ -83,8 +88,13 @@
 							<img id="settingsAvatar" src="img/icons/avatar.png">
 							<div class="tint"></div>
 							<input id="fileInput" type="file"></input>
+							<div id="loading"></div>
 						</div>
 					</div>
+					<br>
+					<br>
+					<br>
+					<br>
 					<div id="droffs">
 						<h2>My droffs</h2>
 						<p>heyhey</p>

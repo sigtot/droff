@@ -544,20 +544,38 @@ input[type="range"]:focus{
 	top:-10px;
 }
 
-#userName{
-	display:inline-block;
+#userNameContainer{
 	position:relative;
 	left:50%;
 	transform: translateX(300px);
+	top:0;
+	pointer-events:none;
+	cursor:pointer;
+	width:200px;
+	height:60px;
+	overflow:visible;
+}
+
+#userName{
+	display:inline-block;
+	position:relative;
 	font-weight:300;
 	color:#333;
 	font-size:30px;
 	line-height:60px;
-	top:0;
-	cursor:pointer;
-	width:200px;
 	margin-left:15px;
-	pointer-events:none;
+}
+
+#tinyAvatar{
+	position:relative;
+	height:30px;
+	width:30px;
+	margin-left:10px;
+	top:5px;
+	border-radius:15px;
+	background:url("img/icons/avatar.png");
+	background-size:30px;
+	box-shadow:0px 1px 1px rgba(0,0,0,0.2), 0px 0px 1px rgba(0,0,0,0.2);
 }
 
 /*Arrow after username*/
@@ -574,11 +592,11 @@ input[type="range"]:focus{
 	transition:0.2s;
 }*/
 
-#userName:hover{
-	opacity:0.9;
+#userNameContainer:hover #userName{
+	opacity:0.8;
 }
 
-#userName.enabled{
+#userNameContainer.enabled{
 	pointer-events:all !important;
 }
 
@@ -680,8 +698,8 @@ input[type="range"]:focus{
 	-webkit-transform:translateX(-50%);
 	transform:translateX(-50%);
 
-	-webkit-transform-origin:50% left;
-	transform-origin:50% left;
+	-webkit-transform-origin:left 50%;
+	transform-origin:left 50%;
 
 	transition:opacity 0.3s, filter 0.3s, transform 0.1s;
 	-webkit-transition:-webkit-opacity 0.3s, -webkit-filter 0.3s, -webkit-transform 0.1s;
@@ -741,7 +759,7 @@ input[type="range"]:focus{
 }
 
 #avatarWrapper:hover .tint{
-	opacity:0.3;
+	opacity:0.5;
 }
 
 #fileInput{
@@ -772,4 +790,33 @@ input[type="range"]:focus{
 
 #avatarWrapper:hover:after{
 	opacity:1;
+}
+
+#loading{
+	height:5px;
+	width:0%;
+	background:#01579B;
+	position:absolute;
+	bottom:0;
+}
+
+#loading.initiated{
+	width:95%;
+
+	-webkit-transition: all 30000ms cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	-moz-transition: 	all 30000ms cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	-o-transition: 		all 30000ms cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	transition: 		all 30000ms cubic-bezier(0.045, 0.745, 0.380, 0.995); /* custom */
+
+	-webkit-transition-timing-function: cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	-moz-transition-timing-function: 	cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	-o-transition-timing-function: 		cubic-bezier(0.045, 0.745, 0.380, 0.995); 
+	transition-timing-function: 		cubic-bezier(0.045, 0.745, 0.380, 0.995); /* custom */
+}
+
+#loading.finished{
+	width:100%;
+	opacity: 0;
+	transition:width 1s ease 0s, opacity 0.5s ease 0.8s !important;
+	-webkit-transition:width 1s ease 0s, opacity 0.5s ease 0.8s !important;
 }

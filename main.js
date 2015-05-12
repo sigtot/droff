@@ -19,7 +19,9 @@ var app 				= document.getElementById("appE");
 var user 				= document.getElementById("userE");
 var finding 			= document.getElementById("findingE");
 var loggedInText		= document.getElementById("loggedInText");
+var userNameContainer	= document.getElementById("userNameContainer");
 var userNameMenu		= document.getElementById("userName");
+var tinyAvatar			= document.getElementById("tinyAvatar");
 var userMenu 			= document.getElementById("userMenu");
 var notDropDown			= document.getElementById("notDropDown");
 var menuFriends			= document.getElementById("menuFriends");
@@ -37,6 +39,7 @@ var settingButton 	= document.getElementsByClassName("settingButton");
 var strangerIcon 		= document.getElementById("strangerIcon");
 var fileInput 			= document.getElementById("fileInput");
 var settingsAvatar 		= document.getElementById("settingsAvatar");
+var loading 			= document.getElementById("loading");
 
 /* Arrayer */
 var colors = [
@@ -128,9 +131,13 @@ function resumeSession(){
 		data: { username: user, token: token}
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
-		if(msg == "success"){
+		if(msgSplit[0] == "success"){
 			// User is logged in
 			loginPage();
+			if(msgSplit[1]){
+				settingsAvatar.src 	= "img/avatar/" + msgSplit[1];
+				tinyAvatar.src 		= "img/avatar/" + msgSplit[1];
+			}
 		}else{
 			// User is not logged in
 			if(msg == "fail"){
@@ -164,9 +171,9 @@ function setColors(){
 
 function checkUserName(){
 	if(userNameMenu.innerHTML == "Not logged in"){
-		userNameMenu.className = "";
+		userNameContainer.className = "";
 	}else{
-		userNameMenu.className = "enabled";
+		userNameContainer.className = "enabled";
 	}
 }
 
@@ -344,11 +351,7 @@ function signUp(){
 		if(finishedRequest = true){
 			signUpSubmit.innerHTML = "Sign Up";
 		}
-		setTimeout(
-			function(){ 
-				signUpSubmit.innerHTML = "Sign Up";
-			},
-		3000);
+		
 	}
 }
 
@@ -368,6 +371,11 @@ function login(){
 			if(msgSplit[0] == "success"){
 				// Successfully logged in
 				createSession(msgSplit[1]);
+
+				if(msgSplit[2]){
+					settingsAvatar.src 	= "img/avatar/" + msgSplit[2];
+					tinyAvatar.src 		= "img/avatar/" + msgSplit[2];
+				}
 
 				loginPage();
 				
@@ -648,7 +656,7 @@ toggleUserNameMenu = function(){
 	}
 	//userMenu.className = "visible dropDown box";
 }
-userNameMenu.onclick = toggleUserNameMenu;
+userNameContainer.onclick = toggleUserNameMenu;
 notDropDown.onclick = toggleUserNameMenu;
 
 hideUserNameMenu = function(){
@@ -689,36 +697,49 @@ function logOutPage(){
 
 fileInput.onchange = imageUpload;
 function imageUpload(){
-	var currentCookie = getCookie("sessioncookie");
-	var cookieSplit = currentCookie.split(",");
-	var token = cookieSplit[1];
+	if(fileInput.value != "") {
+		loading.className = "initiated";
 
-	var file_data = $('#fileInput').prop("files")[0];   
-	var form_data = new FormData();                  
+		var currentCookie = getCookie("sessioncookie");
+		var cookieSplit = currentCookie.split(",");
+		var token = cookieSplit[1];
 
-	var extension = file_data.name.split('.').pop();
+		var file_data = $('#fileInput').prop("files")[0];   
+		var form_data = new FormData();                  
 
-	form_data.append("file", file_data);
-	form_data.append("token", token);
-	form_data.append("extension", extension);
-	$.ajax({
-		url: "upload.php",
-		dataType: "text",
-		cache: false,
-		contentType: false,
-		processData: false,
-		data: form_data,                         
-		type: "post",
-		success: function(msg){
-			if(msg == "wrong"){
-			}else{
-				if(msg == "large"){
+		var extension = file_data.name.split('.').pop();
+
+		form_data.append("file", file_data);
+		form_data.append("token", token);
+		form_data.append("extension", extension);
+		$.ajax({
+			url: "upload.php",
+			dataType: "text",
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,                         
+			type: "post",
+			success: function(msg){
+				if(msg == "wrong"){
 				}else{
-				settingsAvatar.src = msg + "?" + new Date().getTime();
+					if(msg == "large"){
+					}else{
+					settingsAvatar.src 	= msg + "?" + new Date().getTime();
+					tinyAvatar.src 		= msg + "?" + new Date().getTime();
+					}
 				}
+			},
+			complete: function(){
+				// stop loading
+				loading.className = "finished";
+				setTimeout(function(){ 
+					loading.className = "";
+				},3000);
 			}
-		}
-	});
+		});
+	}
+	
 
 	/*$.ajax({
 		type: "POST",
