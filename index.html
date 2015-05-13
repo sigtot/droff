@@ -83,12 +83,27 @@
 				<div class="wrapper">
 					<div id="settings">
 						<h2>Settings</h2>
-						<h3>Avatar</h3>
-						<div id="avatarWrapper">
-							<img id="settingsAvatar" src="img/icons/avatar.png">
-							<div class="tint"></div>
-							<input id="fileInput" type="file"></input>
-							<div id="loading"></div>
+
+						<div class="settingsContainer">
+							<h3>Avatar</h3>
+							<div id="avatarWrapper">
+								<img id="settingsAvatar" src="img/icons/avatar.png">
+								<div class="tint"></div>
+								<input id="fileInput" type="file"></input>
+								<div id="loading"></div>
+							</div>
+						</div>
+
+						<div class="settingsDevider"></div>
+
+						<div class="settingsContainer">
+							<h3>Change password</h3>
+							<input class="fancyInput" id="oldPass" placeholder="Old password" type="Password"></input>
+							<input class="fancyInput" id="newPass" placeholder="New password" type="Password"></input>
+							<button id="changePass">Change password</button>
+
+							<h3>Delete account</h3>
+							<button id="deleteAccount">Delete account</button>
 						</div>
 					</div>
 					<br>
