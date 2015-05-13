@@ -40,6 +40,10 @@ var strangerIcon 		= document.getElementById("strangerIcon");
 var fileInput 			= document.getElementById("fileInput");
 var settingsAvatar 		= document.getElementById("settingsAvatar");
 var loading 			= document.getElementById("loading");
+var deleteAccountButton = document.getElementById("deleteButton");
+var deleteAccountDiv	= document.getElementById("deleteAccount");
+var deleteAccountCancel = document.getElementById("cancelDelete");
+
 
 /* Arrayer */
 var colors = [
@@ -755,4 +759,14 @@ function imageUpload(){
 		}
 		
 	});*/
+}
+
+deleteAccountButton.onclick = showDeleteForm;
+function showDeleteForm(){
+	deleteAccountDiv.className = "active";
+}
+
+deleteAccountCancel.onclick = hideDeleteForm;
+function hideDeleteForm(){
+	deleteAccountDiv.className = "";
 }

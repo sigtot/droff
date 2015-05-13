@@ -102,8 +102,26 @@
 							<input class="fancyInput" id="newPass" placeholder="New password" type="Password"></input>
 							<button id="changePass">Change password</button>
 
+							<h3>Change email</h3>
+							<input class="fancyInput" id="oldPass" placeholder="Your password" type="Password"></input>
+							<input class="fancyInput" id="newPass" placeholder="New email" type="text"></input>
+							<button id="changePass">Change email</button>
+
+						</div>
+
+						<div class="settingsDevider"></div>
+
+						<div class="settingsContainer">
 							<h3>Delete account</h3>
-							<button id="deleteAccount">Delete account</button>
+							<div id="deleteAccount" class="">
+								<button id="deleteButton">Delete account</button>
+								<div id="deleteForm">
+									<p>Warning! This will permanently delete your account.</p>
+									<input class="fancyInput" id="deletePass" placeholder="Your password" type="Password"></input>
+									<button id="cancelDelete">Cancel</button>
+									<button id="confirmDelete">Delete</button>
+								</div>
+							</div>
 						</div>
 					</div>
 					<br>
