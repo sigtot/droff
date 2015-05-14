@@ -693,9 +693,9 @@ input[type="range"]:focus{
 }
 
 #settingsAvatar{
-	height:400px;
+	height:300px;
 	
-	margin-left:200px;
+	margin-left:150px;
 	-webkit-transform:translateX(-50%);
 	transform:translateX(-50%);
 
@@ -707,8 +707,8 @@ input[type="range"]:focus{
 }
 
 #avatarWrapper{
-	height:400px;
-	width:400px;
+	height:300px;
+	width:300px;
 	position:relative;
 	text-align:center;
 	overflow:hidden;
@@ -740,7 +740,7 @@ input[type="range"]:focus{
 	color:#fff;
 	pointer-events:none;
 	font-size:30px;
-	line-height:400px;
+	line-height:300px;
 	z-index:5;
 	margin-top:-10px;
 }
@@ -767,8 +767,8 @@ input[type="range"]:focus{
 	position:absolute;
 	top:0;
 	left:0px;
-	height:400px;
-	width:400px;
+	height:300px;
+	width:300px;
 	opacity:0;
 	cursor:pointer;
 }

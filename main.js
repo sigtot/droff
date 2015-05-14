@@ -43,7 +43,9 @@ var loading 			= document.getElementById("loading");
 var deleteAccountButton = document.getElementById("deleteButton");
 var deleteAccountDiv	= document.getElementById("deleteAccount");
 var deleteAccountCancel = document.getElementById("cancelDelete");
-
+var oldPass				= document.getElementById("oldPass");
+var newPass				= document.getElementById("newPass");
+var changePass			= document.getElementById("changePass");
 
 /* Arrayer */
 var colors = [
@@ -769,4 +771,10 @@ function showDeleteForm(){
 deleteAccountCancel.onclick = hideDeleteForm;
 function hideDeleteForm(){
 	deleteAccountDiv.className = "";
+}
+
+oldPass.value.onchange = checkChangePassFields;
+newPass.value.onchange = checkChangePassFields;
+function checkChangePassFields(){
+	
 }
