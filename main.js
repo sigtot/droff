@@ -40,13 +40,18 @@ var strangerIcon 		= document.getElementById("strangerIcon");
 var fileInput 			= document.getElementById("fileInput");
 var settingsAvatar 		= document.getElementById("settingsAvatar");
 var loading 			= document.getElementById("loading");
+
 var deleteAccountButton = document.getElementById("deleteButton");
 var deleteAccountDiv	= document.getElementById("deleteAccount");
 var deleteAccountCancel = document.getElementById("cancelDelete");
+
 var oldPass				= document.getElementById("oldPass");
 var newPass				= document.getElementById("newPass");
 var changePass			= document.getElementById("changePass");
 
+var oldEmail			= document.getElementById("oldEmail");
+var newEmail			= document.getElementById("newEmail");
+var changeEmail			= document.getElementById("changeEmail");
 /* Arrayer */
 var colors = [
 	"#000000", "#212121", "#616161", 
@@ -773,8 +778,74 @@ function hideDeleteForm(){
 	deleteAccountDiv.className = "";
 }
 
-oldPass.value.onchange = checkChangePassFields;
-newPass.value.onchange = checkChangePassFields;
+oldPass.oninput = checkChangePassFields;
+newPass.oninput = checkChangePassFields;
 function checkChangePassFields(){
-	
+	if(oldPass.value.length > 0){
+		var oldPassOk = true;
+	}else{
+		var oldPassOk = false;
+	}
+
+	if(newPass.value.length >= 5){
+		var newPassOk = true;
+	}else{
+		var newPassOk = false;
+	}
+
+	if(oldPassOk && newPassOk){
+		changePass.className = "active";
+	}else{
+		changePass.className = "";
+	}
+}
+
+oldEmail.oninput = checkChangeEmailFields;
+newEmail.oninput = checkChangeEmailFields;
+function checkChangeEmailFields(){
+	if(oldEmail.value.length > 0){
+		var oldEmailOk = true;
+	}else{
+		var oldEmailOk = false;
+	}
+
+	if(validateEmail(newEmail.value)){
+		var newEmailOk = true;
+	}else{
+		var newEmailOk = false;
+	}
+
+	if(oldEmailOk && newEmailOk){
+		changeEmail.className = "active";
+	}else{
+		changeEmail.className = "";
+	}
+}
+
+function changePassword(){
+	changePass.innerHTML = "Changing password...";
+	var newpass = newPass.value;
+	var oldpass = oldPass.value;
+
+	// Check if the old password is correct and the token has a corresponding session
+	$.ajax({
+	type: "POST",
+	url: "poll.php",
+	data: {newpass: newpass, oldpass: oldpass, token: token}
+	}).done(function( msg ) {
+	if(msg == "success"){
+		// Password has changed
+		alert("congratu-fucking-lations your password has been changed");
+	}else{
+		if(msg == "wrong"){
+			oldPass.className = "fancyInput error";
+		}
+		// It failed
+		alert("something went wrong");
+	}
+	});
+}
+
+function changeEmail(){
+
 }

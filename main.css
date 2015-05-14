@@ -921,8 +921,21 @@ input[type="range"]:focus{
 
 #changePass{
 	margin-bottom:40px;
+	color:#01579B;
+	border:solid 2px #01579B;
+	background:transparent;
+}
+
+#changeEmail{
+	color:#01579B;
+	border:solid 2px #01579B;
+	background:transparent;
+}
+
+#changePass.active, #changeEmail.active{
 	background:#01579B;
 	color:#fff;
+	pointer-events:all;
 }
 
 .settingsContainer button, #deleteButton{
