@@ -1004,10 +1004,22 @@ input[type="range"]:focus{
 #cancelDelete{
 	background:#777;
 	pointer-events:all;
+	border:solid 2px #777;
+	line-height:44px !important;
 }
 
 #confirmDelete{
+	margin-top:2px;
+	border:solid 2px #E53935;
+	color:#E53935 !important; 
+	background:transparent;
+	line-height:44px !important;
+}
+
+#confirmDelete.active{
 	background:#E53935;
+	color:#fff !important;
+	pointer-events:all;
 }
 
 #deleteForm button{
@@ -1026,4 +1038,49 @@ input[type="range"]:focus{
 #deleteAccount.active #deleteForm{
 	height:178px;
 	transition-delay:0.3s;
+}
+
+#goodBye{
+	position:fixed;
+	height:100%;
+	width:100%;
+	background:#000;
+	opacity: 0;
+	z-index:999999999;
+	transition:7s;
+	-webkit-transition:7s;
+	top:0;
+	text-align:center !important;
+	display:none;
+}
+
+#goodBye h3{
+	transition-delay:7s !important;
+	transition:1s !important;
+	opacity:0;
+	font-size:30px;
+	font-weight:300;
+	margin-top:300px;
+	color:#000;
+	font-family:Source Sans Pro;
+}
+
+#goodBye h1{
+	transition-delay:9s !important;
+	transition:1s !important;
+	opacity:0;
+	font-size:50px;
+	font-weight:300;
+	margin-top:50px;
+	font-family:Source Sans Pro;	
+	color:#000;
+}
+
+#goodBye.active{
+	opacity:1;
+}
+
+#goodBye.active h1, #goodBye.active h3{
+	color:#fff;
+	opacity:1;
 }

@@ -43,13 +43,15 @@ var loading 			= document.getElementById("loading");
 
 var deleteAccountButton = document.getElementById("deleteButton");
 var deleteAccountDiv	= document.getElementById("deleteAccount");
+var confirmDelete 		= document.getElementById("confirmDelete");
 var deleteAccountCancel = document.getElementById("cancelDelete");
+var deletePass			= document.getElementById("deletePass");
 
 var oldPass				= document.getElementById("oldPass");
 var newPass				= document.getElementById("newPass");
 var changePass			= document.getElementById("changePass");
 
-var oldEmail			= document.getElementById("oldEmail");
+var emailPass			= document.getElementById("emailPass");
 var newEmail			= document.getElementById("newEmail");
 var changeEmail			= document.getElementById("changeEmail");
 /* Arrayer */
@@ -778,6 +780,15 @@ function hideDeleteForm(){
 	deleteAccountDiv.className = "";
 }
 
+deletePass.oninput = checkDeleteAccountField;
+function checkDeleteAccountField(){
+	if(deletePass.value.length > 0){
+		confirmDelete.className = "active";
+	}else{
+		confirmDelete.className = "";
+	}
+}
+
 oldPass.oninput = checkChangePassFields;
 newPass.oninput = checkChangePassFields;
 function checkChangePassFields(){
@@ -800,13 +811,13 @@ function checkChangePassFields(){
 	}
 }
 
-oldEmail.oninput = checkChangeEmailFields;
+emailPass.oninput = checkChangeEmailFields;
 newEmail.oninput = checkChangeEmailFields;
 function checkChangeEmailFields(){
-	if(oldEmail.value.length > 0){
-		var oldEmailOk = true;
+	if(emailPass.value.length > 0){
+		var emailPassOk = true;
 	}else{
-		var oldEmailOk = false;
+		var emailPassOk = false;
 	}
 
 	if(validateEmail(newEmail.value)){
@@ -815,7 +826,7 @@ function checkChangeEmailFields(){
 		var newEmailOk = false;
 	}
 
-	if(oldEmailOk && newEmailOk){
+	if(emailPassOk && newEmailOk){
 		changeEmail.className = "active";
 	}else{
 		changeEmail.className = "";
@@ -858,6 +869,87 @@ function changePassword(){
 	}
 }
 
-function changeEmail(){
+changeEmail.onclick = changeEmailFunction;
+function changeEmailFunction(){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// Cookie finnes
+		var cookieSplit = currentCookie.split(",");
 
+		changeEmail.innerHTML = "Changing your email...";
+
+		var token = cookieSplit[1];
+		var pass = emailPass.value;
+		var email = newEmail.value;
+		
+		$.ajax({
+			type: "POST",
+			url: "changeemail.php",
+			data: {token: token, pass: pass, email: email}
+			}).done(function( msg ) {
+			if(msg == "success"){
+				// Password has changed
+				alert("congratu-fucking-lations your email has been changed");
+			}else{
+				if(msg == "wrong"){
+					emailPass.className = "fancyInput error";
+				}else{
+					if(msg == "taken"){
+						// Email is taken
+						newEmail.className = "fancyInput error";
+					}else{
+						// It failed
+						alert("something went wrong");
+					}
+				}
+			}
+			changeEmail.innerHTML = "Change email";
+		});
+	}else{
+		// No cookie
+	}
+}
+
+//confirmDelete.onclick = deleteUser;
+function deleteUser(){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// Cookie finnes
+		var cookieSplit = currentCookie.split(",");
+
+		confirmDelete.innerHTML = "Deleting...";
+
+		var token = cookieSplit[1];
+		var pass = deletePass.value;
+		
+		$.ajax({
+			type: "POST",
+			url: "deleteuser.php",
+			data: {token: token, pass: pass}
+			}).done(function( msg ) {
+			if(msg == "success"){
+				// Password has changed
+				goodBye();
+			}else{
+				if(msg == "wrong"){
+					deletePass.className = "fancyInput error";
+				}else{
+					// It failed
+					alert("something went wrong");
+				}
+			}
+			confirmDelete.innerHTML = "Delete";
+		});
+	}else{
+		// No cookie
+	}
+}
+
+confirmDelete.onclick = goodBye;
+function goodBye(){
+	document.getElementById("goodBye").style.display = "block";
+	setTimeout(function() {
+		document.getElementById("goodBye").className = "active";
+	}, 10);
+	setTimeout(function() {window.close();}, 5000);
 }
