@@ -9,7 +9,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection - does nothing at the moment, i think
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 } 
 
 // Post users credentials
@@ -21,24 +21,33 @@ $oldpass = mysqli_real_escape_string($conn, $oldpass);
 $newpass = mysqli_real_escape_string($conn, $newpass);
 $token = mysqli_real_escape_string($conn, $token);
 
-// Get last ID
-$result = $conn->query("SELECT * FROM users WHERE username = '$user' OR email = '$user'");
+// Get corresponding password for token
+$result = $conn->query("SELECT users.password
+	FROM users
+	INNER JOIN sessions
+	ON users.username = sessions.users_username
+	WHERE sessions.token = '$token'");
 $row = mysqli_fetch_row($result);
 
-$result = $conn->query("SELECT extension FROM avatar WHERE users_id = '$row[0]'");
-$rew = mysqli_fetch_row($result);
-
 // Verify password matches
-$passDB = $row[2];
+$passDB = $row[0];
 
-if (password_verify($pass, $passDB)) {
-    if(empty($rew[0])){
-        echo 'success,' . $row[1];
-    }else{
-        echo 'success,' . $row[1] . "," . $row[0] . "." . $rew[0]; // Eks. "success,sigtot,2.png"
-    }
+
+if (password_verify($oldpass, $passDB)) {
+	$options = [
+		"cost" => 11,
+	];
+
+	$hash = password_hash($newpass, PASSWORD_BCRYPT, $options);
+
+	$sql = "UPDATE users 
+	SET password = '$hash'
+	WHERE password = '$passDB'
+	";
+	$result = $conn->query($sql);
+	echo "success";
 } else {
-    echo 'fail';
+	echo "wrong";
 }
 
 ?>

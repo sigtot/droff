@@ -821,29 +821,41 @@ function checkChangeEmailFields(){
 		changeEmail.className = "";
 	}
 }
-
+changePass.onclick = changePassword;
 function changePassword(){
-	changePass.innerHTML = "Changing password...";
-	var newpass = newPass.value;
-	var oldpass = oldPass.value;
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// Cookie finnes
+		var cookieSplit = currentCookie.split(",");
 
-	// Check if the old password is correct and the token has a corresponding session
-	$.ajax({
-	type: "POST",
-	url: "poll.php",
-	data: {newpass: newpass, oldpass: oldpass, token: token}
-	}).done(function( msg ) {
-	if(msg == "success"){
-		// Password has changed
-		alert("congratu-fucking-lations your password has been changed");
-	}else{
-		if(msg == "wrong"){
-			oldPass.className = "fancyInput error";
+		changePass.innerHTML = "Changing password...";
+
+		var newpass = newPass.value;
+		var oldpass = oldPass.value;
+		var token = cookieSplit[1];
+
+		// Check if the old password is correct and the token has a corresponding session
+		$.ajax({
+		type: "POST",
+		url: "changepassword.php",
+		data: {newpass: newpass, oldpass: oldpass, token: token}
+		}).done(function( msg ) {
+		if(msg == "success"){
+			// Password has changed
+			alert("congratu-fucking-lations your password has been changed");
+		}else{
+			if(msg == "wrong"){
+				oldPass.className = "fancyInput error";
+			}else{
+				// It failed
+				alert("something went wrong");
+			}
 		}
-		// It failed
-		alert("something went wrong");
+		changePass.innerHTML = "Change password";
+		});
+	}else{
+		// No cookie
 	}
-	});
 }
 
 function changeEmail(){
