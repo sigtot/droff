@@ -313,19 +313,30 @@ function checkLoginFields(){
 
 // Sign up
 signUpSubmit.onclick = signUp;
-function signUp(){
-	if(signUpUserReady && signUpPassReady && signUpEmailReady){
+function signUp(guest){
+	if(signUpUserReady && signUpPassReady && signUpEmailReady || guest){
 	    signUpSubmit.innerHTML = "Signing Up...";
 	    var finishedRequest = false;
 	    // Ajax kode for å sende data til databasen i real time
+
+	    if(guest){
+	    	var username = Math.random().toString(36).substring(7);
+		    var email = Math.random().toString(36).substring(7);
+		    var password = Math.random().toString(36).substring(7);
+	    }else{
+		    var username = signUpUser.value;
+		    var email = signUpEmail.value;
+		    var password = signUpPass.value;
+		}
+
 	    $.ajax({
 	        type: "POST",
 	        url: "signup.php",
-	        data: { username: signUpUser.value, email: signUpEmail.value, password: signUpPass.value}
+	        data: { username: username, email: email, password: password}
 	        }).done(function( msg ) {
 	        if(msg == "success"){
 	        	// Brukeren ble signet opp
-	            createSession(signUpUser.value);
+	            createSession(username);
 	            loginPage();
 	        }else{
 	        	// Brukernavnet finnes
@@ -429,7 +440,8 @@ function enterCheck(event){
 
 // Start en session
 enterGuest.onclick = function(){
-	createSession("guest");
+	var guest = true;
+	signUp(guest);
 }
 function createSession(user){
 	$.ajax({
@@ -911,6 +923,7 @@ function changeEmailFunction(){
 }
 
 //confirmDelete.onclick = deleteUser;
+confirmDelete.onclick = deleteUser;
 function deleteUser(){
 	var currentCookie = getCookie("sessioncookie");
 	if(currentCookie){
@@ -945,7 +958,6 @@ function deleteUser(){
 	}
 }
 
-confirmDelete.onclick = goodBye;
 function goodBye(){
 	document.getElementById("goodBye").style.display = "block";
 	setTimeout(function() {
