@@ -323,6 +323,9 @@ function signUp(guest){
 	    	var username = Math.random().toString(36).substring(7);
 		    var email = Math.random().toString(36).substring(7);
 		    var password = Math.random().toString(36).substring(7);
+
+		    // Set local storage guest boolean
+		    localStorage.setItem("isGuest", true);
 	    }else{
 		    var username = signUpUser.value;
 		    var email = signUpEmail.value;
@@ -536,7 +539,7 @@ setInterval(function(){
 	if(polling == true){
 		poll();
 	}
-}, 10000);
+}, 1000);
 
 // Poll for avaliable game
 function poll(){
@@ -593,7 +596,13 @@ function loginPage(){
 	loggedInUser = currentCookie.split(",")[0];
 
 	window.location.hash = "user";
-	userNameMenu.innerHTML = loggedInUser;
+
+	if(localStorage.getItem("isGuest") == "true"){
+		// The session is a guest session
+		userNameMenu.innerHTML = "guest";
+	}else{
+		userNameMenu.innerHTML = loggedInUser;
+	}
 	checkUserName();
 }
 
@@ -707,6 +716,7 @@ function logOut(){
 			}).done(function( msg ) {
 			// Done! Session finnes ikke lengre
 			deleteCookie("sessioncookie");
+			localStorage.setItem("isGuest", false);
 			logOutPage();
 		});
 	}

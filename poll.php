@@ -39,6 +39,14 @@ $result = $conn->query("SELECT users.username,games.gameid
 $row = mysqli_fetch_row($result);
 
 if(empty($row[0])){
+	// Keep polling
+	// Update with new NOW()
+	$sql = "UPDATE games
+	SET thetime = NOW()
+	INNER JOIN users
+	ON users.id = games.users_id
+	WHERE users.username = '$user'";
+	$result = $conn->query($sql);
 
 }else{
 	echo "matched," . $row[1];

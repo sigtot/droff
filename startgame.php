@@ -21,13 +21,14 @@ $gamemode = mysqli_real_escape_string($conn, $gamemode);
 $user = mysqli_real_escape_string($conn, $user);
 
 // Henter bruker id
-	$result = $conn->query("SELECT id FROM users WHERE username = '$user'");
-	$row = mysqli_fetch_row($result);
-	$id = $row[0];
+$result = $conn->query("SELECT id FROM users WHERE username = '$user'");
+$row = mysqli_fetch_row($result);
+$id = $row[0];
 
 // Check if index exists in table
-$result = $conn->query("SELECT gameid 
+$result = $conn->query("SELECT gameid
 	FROM games
+	WHERE thetime > DATE_SUB(NOW(), INTERVAL 10 SECOND)
 	GROUP BY gameid
 	HAVING COUNT(gameid) < 2
 	ORDER BY RAND()
@@ -48,16 +49,16 @@ if(empty($ledigid)){
 	// Game id er random
 	$newgameid = rand(10000,99999);
 
-	// Lag ny rad i games
-	$sql = "INSERT INTO games VALUES ('$newgameid', '$id')";
+	// Lag ny rad i games med generert id
+	$sql = "INSERT INTO games (gameid, users_id) VALUES ('$newgameid', '$id')";
 	$result = $conn->query($sql);
 
 	echo "poll";
 }else{
 	// Det er noen som søker
 
-	// Lag ny rad i games
-	$sql = "INSERT INTO games VALUES ('$ledigid', '$id')";
+	// Lag ny rad i games med den ledige iden
+	$sql = "INSERT INTO games (gameid, users_id) VALUES ('$ledigid', '$id')";
 	$result = $conn->query($sql);
 	echo "success," . $ledigid;
 }
