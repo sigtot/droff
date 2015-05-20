@@ -12,6 +12,7 @@ var signUpEmail  		= document.getElementById("signUpEmail");
 var signUpPass  		= document.getElementById("signUpPass");
 var signUpSubmit		= document.getElementById("signUpSubmit");
 var enterGuest			= document.getElementById("enterGuest");
+var secondEnterGuest	= document.getElementById("secondEnterGuest");
 var loginContainer		= document.getElementById("loginContainer");
 var orGuest				= document.getElementById("orGuest");
 var splash				= document.getElementById("splashE");
@@ -28,15 +29,18 @@ var menuFriends			= document.getElementById("menuFriends");
 var menuDroffs			= document.getElementById("menuDroffs");
 var menuSettings		= document.getElementById("menuSettings");
 var menuLogout			= document.getElementById("menuLogout");
+var passwordReset		= document.getElementById("passwordReset");
 
 // Brush settings
-var preview 		= document.getElementById("preview");
-var brushSizeRange 	= document.getElementById("brushSizeRange");
-var settingButtons 	= document.getElementById("settingButtons");
-var settingButton 	= document.getElementsByClassName("settingButton");
+var preview 			= document.getElementById("preview");
+var brushSizeRange 		= document.getElementById("brushSizeRange");
+var settingButtons 		= document.getElementById("settingButtons");
+var settingButton 		= document.getElementsByClassName("settingButton");
 
 // User page
-var strangerIcon 		= document.getElementById("strangerIcon");
+var strangerIcon 		= document.getElementById("stranger");
+var friendIcon	 		= document.getElementById("friend");
+var anarchyIcon 		= document.getElementById("anarchy");
 var fileInput 			= document.getElementById("fileInput");
 var settingsAvatar 		= document.getElementById("settingsAvatar");
 var loading 			= document.getElementById("loading");
@@ -54,6 +58,13 @@ var changePass			= document.getElementById("changePass");
 var emailPass			= document.getElementById("emailPass");
 var newEmail			= document.getElementById("newEmail");
 var changeEmail			= document.getElementById("changeEmail");
+
+// App
+var partnerName 		= document.getElementById("partnerName");
+var partnerImg			= document.getElementById("partnerImg");
+var downloadButton		= document.getElementById("downloadButton");
+var addFriend 			= document.getElementById("addFriend");
+
 /* Arrayer */
 var colors = [
 	"#000000", "#212121", "#616161", 
@@ -320,12 +331,10 @@ function signUp(guest){
 	    // Ajax kode for å sende data til databasen i real time
 
 	    if(guest){
-	    	var username = Math.random().toString(36).substring(7);
+	    	var username = "Guest-" + Math.random().toString(36).substring(7);
 		    var email = Math.random().toString(36).substring(7);
 		    var password = Math.random().toString(36).substring(7);
 
-		    // Set local storage guest boolean
-		    localStorage.setItem("isGuest", true);
 	    }else{
 		    var username = signUpUser.value;
 		    var email = signUpEmail.value;
@@ -446,6 +455,11 @@ enterGuest.onclick = function(){
 	var guest = true;
 	signUp(guest);
 }
+
+secondEnterGuest.onclick = function(){
+	var guest = true;
+	signUp(guest);
+}
 function createSession(user){
 	$.ajax({
 		type: "POST",
@@ -517,6 +531,20 @@ function startGame(gameMode){
 			currentFirebase = msgSplit[1];
 			window.location.hash = "#app";
 
+			// Display the partner's username
+			partnerName.innerHTML = msgSplit[2];
+
+			// And the avatar
+			// Avatar extension
+			var avatarSplit = msgSplit[3].split(".");
+			var aX = avatarSplit[avatarSplit.length - 1];
+			
+			if(aX == "png" || aX == "PNG" || aX == "jpg" || aX == "JPG" || aX == "jpeg" || aX == "JPEG"){
+				partnerImg.src = "img/avatar/" + msgSplit[3];
+			}else{
+				partnerImg.src = "img/icons/avatar.png";
+			}
+
 			// Add draw.js
 			addJsFile("draw.js");
 		}else{
@@ -569,6 +597,21 @@ function poll(){
 			window.location.hash = "#app";
 			polling = false;
 
+			// Display the partner's username
+			partnerName.innerHTML = msgSplit[2];
+
+			// And the avatar
+
+			// Avatar extension
+			var avatarSplit = msgSplit[3].split(".");
+			var aX = avatarSplit[avatarSplit.length - 1];
+			
+			if(aX == "png" || aX == "PNG" || aX == "jpg" || aX == "JPG" || aX == "jpeg" || aX == "JPEG"){
+				partnerImg.src = "img/avatar/" + msgSplit[3];
+			}else{
+				partnerImg.src = "img/icons/avatar.png";
+			}
+
 			// Add draw.js
 			addJsFile("draw.js");
 		}else{
@@ -597,12 +640,7 @@ function loginPage(){
 
 	window.location.hash = "user";
 
-	if(localStorage.getItem("isGuest") == "true"){
-		// The session is a guest session
-		userNameMenu.innerHTML = "guest";
-	}else{
-		userNameMenu.innerHTML = loggedInUser;
-	}
+	userNameMenu.innerHTML = loggedInUser;
 	checkUserName();
 }
 
@@ -716,7 +754,6 @@ function logOut(){
 			}).done(function( msg ) {
 			// Done! Session finnes ikke lengre
 			deleteCookie("sessioncookie");
-			localStorage.setItem("isGuest", false);
 			logOutPage();
 		});
 	}
@@ -974,4 +1011,67 @@ function goodBye(){
 		document.getElementById("goodBye").className = "active";
 	}, 10);
 	setTimeout(function() {window.close();}, 5000);
+}
+
+anarchyIcon.onclick = playAnarchyMode;
+function playAnarchyMode(){
+	ref.child("anarchy").set({
+		placeholder: "placeholder"
+	});
+	drawRef = new Firebase("https://droff.firebaseio.com/" + "anarchy");
+	window.location.hash = "#app";
+	
+	document.getElementById("partnerContainer").style.display = "none";
+
+	// Add draw.js
+	addJsFile("draw.js");
+}
+
+downloadButton.onclick = downloadDroff;
+function downloadDroff(){
+	var canvas = document.getElementById("canvas");
+	var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+	window.location.href=img;
+
+	/*var link = document.createElement('a');
+	link.href = img;
+	link.download = img;
+	document.body.appendChild(link);
+	link.click();*/
+}
+
+/*passwordReset.onclick = resetPassword;
+function resetPassword(){
+
+}*/
+
+addFriend.onclick = sendFriendRequest;
+function sendFriendRequest(){
+	var currentCookie = getCookie("sessioncookie");
+	if(currentCookie){
+		// Cookie finnes
+		var cookieSplit = currentCookie.split(",");
+
+		confirmDelete.innerHTML = "Deleting...";
+
+		var user = cookieSplit[0];
+
+		var friend = partnerName.innerHTML;
+		
+		$.ajax({
+			type: "POST",
+			url: "friendrequest.php",
+			data: {user: user, friend: friend}
+			}).done(function( msg ) {
+			if(msg == "success"){
+				// Password has changed
+				alert(msg);
+			}else{
+				// It failed
+				alert(msg);
+			}
+		});
+	}else{
+		// No cookie
+	}
 }

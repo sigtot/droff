@@ -25,8 +25,15 @@ $result = $conn->query("SELECT id FROM users WHERE username = '$user'");
 $row = mysqli_fetch_row($result);
 $id = $row[0];
 
-// Check if index exists in table
-$result = $conn->query("SELECT gameid
+// Slett tidligere spill
+$sql = "DELETE FROM games WHERE users_id = '$id'";
+$result = $conn->query($sql);
+
+// Sjekk etter søkere
+
+// Index til en søkende bruker må være mindre enn 10 sek gammel
+// Må ha unik id
+$result = $conn->query("SELECT gameid, users_id
 	FROM games
 	WHERE thetime > DATE_SUB(NOW(), INTERVAL 10 SECOND)
 	GROUP BY gameid
@@ -35,9 +42,10 @@ $result = $conn->query("SELECT gameid
 	LIMIT 1");
 $row = mysqli_fetch_row($result);
 $ledigid = $row[0];
+$partnerid = $row[1];
 
 if(empty($ledigid)){
-	// ingen søker
+	// Ingen søker
 
 	// Lager ny gameid
 	
@@ -57,9 +65,20 @@ if(empty($ledigid)){
 }else{
 	// Det er noen som søker
 
+	// Hent navn og avatar
+	$result = $conn->query("SELECT users.username, avatar.extension
+	FROM users
+	LEFT JOIN avatar
+	ON users.id = avatar.users_id
+	WHERE users.id = '$partnerid'");
+	$row = mysqli_fetch_row($result);
+
+	$partner = $row[0];
+	$avatar = $partnerid . "." . $row[1]; // eks. 2.jpg
+
 	// Lag ny rad i games med den ledige iden
 	$sql = "INSERT INTO games (gameid, users_id) VALUES ('$ledigid', '$id')";
 	$result = $conn->query($sql);
-	echo "success," . $ledigid;
+	echo "success," . $ledigid . "," . $partner . "," . $avatar;
 }
 ?>

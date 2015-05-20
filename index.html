@@ -14,7 +14,7 @@
 		<meta name="msapplication-TileColor" content="#FFFFFF" />
 		<meta name="msapplication-TileImage" content="http://sigurdtotland.com/droff/favicon/mstile-144x144.png" />
 
-		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700' rel='stylesheet' type='text/css'>
 		<meta name="theme-color" content="#01579B">
 		<script src="https://cdn.firebase.com/js/client/2.2.3/firebase.js"></script>
 		<title>Droff - Draw with your friends</title>
@@ -24,15 +24,16 @@
 		<img id="hero" src="img/blueBlur.jpg" class="widthIsSmallest">
 		
 		<div id="navBar">
+			<div id="logo">!D</div>
 			<div id="userNameContainer">
 				<h3 id="userName">Not logged in</h3>
 				<img id="tinyAvatar" src="img/icons/avatar.png">
 			</div>
 			<div id="userMenu" class="dropDown box">
 				<ul>
-					<li id="menuFriends">Friends</li>
-					<li id="menuDroffs">My droffs</li>
 					<li id="menuSettings">Settings</li>
+					<li id="menuDroffs">My droffs</li>
+					<li id="menuFriends">Friends</li>
 					<li id="menuLogout">Log out</li>
 				</ul>
 			</div>
@@ -62,10 +63,16 @@
 					<input class="signUpInput" id="signUpPass" type="password" name="password" placeholder="Password">
 					<button id="signUpSubmit">Sign Up</button>
 				</div>
-
+				<!--<h5 id="passwordReset">Forgot password</h5>-->
 			</div>
 			<div id="bodyContainer">
-				
+				<div class="wrapper">
+					<h2>What will you draw?</h2>
+					<button id="secondEnterGuest">Play now!</button>
+				</div>
+			</div>
+			<div id="footer">
+				<h2>Website by Sigurd Totland</h2>
 			</div>
 		</div>
 
@@ -145,7 +152,7 @@
 		</div>
 
 		<div id="appE">
-			<canvas id="canvas" height="500" width="800">Sorry, your browser does not support the html5 canvas element. Upgrading your browser fixes this issue.</canvas>
+			<canvas id="canvas" height="450" width="700">Sorry, your browser does not support the html5 canvas element. Upgrading your browser fixes this issue.</canvas>
 
 			<div id="cursor">
 			</div>
@@ -163,6 +170,27 @@
 					</div>
 				</div>
 			</div>
+
+			<div id="partnerContainer" class="box">
+				<div class="wrapper">
+					<h4>You are playing with:</h4>
+					<h2 id="partnerName">Mr Stevens</h2>
+					<!--<h3>Level <span id="partnerLevel">6</span></h3>
+					<h4><span id="partnerGames">35</span> games, <span id="partnerDroffs">7</span> public droffs</h4>-->
+					<button id="addFriend">Add as friend</button>
+					<div id="partnerImgWrapper">
+						<img id="partnerImg" src="img/icons/avatar.png">
+					</div>
+				</div>
+			</div>
+			<div id="downloadContainer" class="box">
+				<div class="wrapper">
+					<h4>Save this droff</h4>
+					<button id="downloadButton">Download</button>
+					<!--<button id="uploadToCloud">Save to cloud</button>-->
+				</div>
+			</div>
+
 		</div>
 
 		<div id="findingE">

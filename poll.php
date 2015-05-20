@@ -38,18 +38,26 @@ $result = $conn->query("SELECT users.username,games.gameid
 	AND users.username <> '$user'");
 $row = mysqli_fetch_row($result);
 
-if(empty($row[0])){
-	// Keep polling
-	// Update with new NOW()
-	$sql = "UPDATE games
-	SET thetime = NOW()
+$sql = "UPDATE games
 	INNER JOIN users
 	ON users.id = games.users_id
+	SET thetime = NOW()
 	WHERE users.username = '$user'";
-	$result = $conn->query($sql);
+$result = $conn->query($sql);
 
+if(empty($row[0])){
+	// Keep polling
 }else{
-	echo "matched," . $row[1];
-}
+	// Get avatar
+	$result = $conn->query("SELECT users_id, extension
+	FROM avatar
+	LEFT JOIN users
+	ON avatar.users_id=users.id
+	WHERE users.username =  '$row[0]'");
 
+	$rew = mysqli_fetch_row($result);
+	$avatar = $rew[0] . "." . $rew[1]; // eks. 4.jpg
+
+	echo "matched," . $row[1] . "," . $row[0] . "," . $avatar;
+}
 ?>
