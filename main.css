@@ -107,6 +107,8 @@ h1{
 	color:#01579B;
 	margin-bottom:10px;
 	margin-top:10px;
+	word-wrap:break-word;
+	width:180px;
 }
 
 #partnerContainer h3{
@@ -728,7 +730,7 @@ input[type="range"]:focus{
 
 #gameModeContainer{
 	position:absolute;
-	left:calc(50% - 450px);
+	left:calc(50% - 300px);
 	overflow:visible;
 	top:200px;
 }
@@ -866,6 +868,11 @@ input[type="range"]:focus{
 	margin-right:15px;
 	box-shadow:inset 0px -1px 0px transparent;
 	transition:0.1s;
+	-webkit-transition:0.1s;
+	-o-transition:0.1s;
+	-moz-transition:0.1s;
+	-ms-transition:0.1s;
+	cursor:pointer;
 }
 
 #userMenu{
@@ -878,7 +885,7 @@ input[type="range"]:focus{
 }
 
 #userMenu.visible{
-	height:165px;
+	height:125px;
 }
 
 .dropDown li:hover{
@@ -1325,4 +1332,115 @@ input[type="range"]:focus{
 #goodBye.active h1, #goodBye.active h3{
 	color:#fff;
 	opacity:1;
+}
+
+#droffs img{
+	width:330px;
+	display:inline-block;
+	border-radius:5px;
+	box-shadow:	0px 5px 10px rgba(0,0,0,0.2), 0px 4px 4px -4px rgba(0,0,0,0.5);
+	margin:10px;
+	transition:opacity 0.2s, filter 0.3s, transform 0.1s;
+	-webkit-transition:-webkit-opacity 0.2s, -webkit-filter 0.3s, -webkit-transform 0.1s;
+	cursor:pointer;
+}
+
+#droffs{
+	background:#333;
+	box-shadow: inset 0 5px 5px rgba(0,0,0,0.1);
+	padding:30px;
+	border-radius:10px;
+	border:solid 1px #eee;
+	text-align:center;
+}
+
+#droffs img:hover{
+	-webkit-filter:saturate(0.6);
+	filter:saturate(0.8);
+	opacity:0.7;
+}
+
+#bigImg{
+	opacity:0;
+	pointer-events:none;
+	transition:opacity 0.3s, filter 1s;
+	-webkit-transition:-webkit-opacity 0.3s, -webkit-filter 1s;
+	-webkit-filter:saturate(0.5);
+	filter:saturate(0.5);
+	max-height:90%;
+	max-width:90%;
+	position:fixed;
+	z-index:500;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	-webkit-transform:translate(-50%,-50%);
+	-o-transform:translate(-50%,-50%);
+	-ms-transform:translate(-50%,-50%);
+	-moz-transform:translate(-50%,-50%);
+	box-shadow:	0px 5px 10px rgba(0,0,0,0.2), 0px 4px 4px -4px rgba(0,0,0,0.5);
+}
+
+#bigImg.visible{
+	opacity:1;
+	pointer-events:all;
+	-webkit-filter:saturate(1);
+	filter:saturate(1);
+	transition:opacity 0.3s, filter 1s;
+	-webkit-transition:-webkit-opacity 0.3s, -webkit-filter 1s;
+}
+
+#black{
+	background:#000;
+	opacity:0;
+	pointer-events:none;
+	transition:0.3s;
+	-webkit-transition:0.3s;
+	-moz-transition:0.3s;
+	-ms-transition:0.3s;
+	-o-transition:0.3s;
+	position:fixed;
+	z-index:100;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+}
+
+#black.visible{
+	opacity:0.5;
+	pointer-events:all;
+}
+
+#deleteIcon{
+	opacity:0;
+	position:fixed;
+	height:40px;
+	bottom:50px;
+	left:50%;
+	cursor:pointer;
+	pointer-events:none;
+	z-index:600;
+
+	transition:0.3s;
+	-webkit-transition:0.3s;
+	-moz-transition:0.3s;
+	-ms-transition:0.3s;
+	-o-transition:0.3s;
+
+	transform:translate(-50%);
+	-webkit-transform:translate(-50%);
+}
+
+#deleteIcon.visible{
+	opacity:1;
+	pointer-events:all;
+}
+
+#deleteIcon:hover{
+	opacity:0.8;
+}
+
+#userMenu a{
+	text-decoration:none;
 }

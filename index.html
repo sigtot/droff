@@ -31,9 +31,8 @@
 			</div>
 			<div id="userMenu" class="dropDown box">
 				<ul>
-					<li id="menuSettings">Settings</li>
-					<li id="menuDroffs">My droffs</li>
-					<li id="menuFriends">Friends</li>
+					<a href="#user"><li id="menuDroffs">My droffs</li></a>
+					<a href="#user"><li id="menuSettings">Settings</li></a>
 					<li id="menuLogout">Log out</li>
 				</ul>
 			</div>
@@ -82,10 +81,10 @@
 					<img class="gameModeIcon" id="strangerIcon" src="img/icons/stranger.png">
 					<h3>Play with a random stranger</h3>
 				</div>
-				<div id="friend" class="gameMode">
+				<!--<div id="friend" class="gameMode">
 					<img class="gameModeIcon" id="friendIcon" src="img/icons/heart.png">
 					<h3>Play with a friend</h3>
-				</div>
+				</div>-->
 				<div id="anarchy" class="gameMode">
 					<img class="gameModeIcon" id="anarchyIcon" src="img/icons/anarchy.png">
 					<h3>Play anarchy mode</h3>
@@ -140,12 +139,8 @@
 					<br>
 					<br>
 					<br>
+					<h2>My droffs</h2>
 					<div id="droffs">
-						<h2>My droffs</h2>
-						<p>heyhey</p>
-						<p>heyhey</p>
-						<p>heyhey</p>
-						<p>heyhey</p>
 					</div>
 				</div>
 			</div>
@@ -177,7 +172,7 @@
 					<h2 id="partnerName">Mr Stevens</h2>
 					<!--<h3>Level <span id="partnerLevel">6</span></h3>
 					<h4><span id="partnerGames">35</span> games, <span id="partnerDroffs">7</span> public droffs</h4>-->
-					<button id="addFriend">Add as friend</button>
+					<!--<button id="addFriend">Add as friend</button>-->
 					<div id="partnerImgWrapper">
 						<img id="partnerImg" src="img/icons/avatar.png">
 					</div>
@@ -187,7 +182,7 @@
 				<div class="wrapper">
 					<h4>Save this droff</h4>
 					<button id="downloadButton">Download</button>
-					<!--<button id="uploadToCloud">Save to cloud</button>-->
+					<button id="uploadToCloud">Save to cloud</button>
 				</div>
 			</div>
 
@@ -203,6 +198,12 @@
 			<h3>We're sorry to see you go already</h3>
 			<h1>Goodbye</h1>
 		</div>
+
+		<img id="bigImg" src="">
+		<div id="deleteBigImg">
+			<img id="deleteIcon" src="img/icons/delete.png">
+		</div>
+		<div id="black"></div>
 		
 		<script src="main.js"></script>
 	</body>

@@ -37,6 +37,20 @@ $result = $conn->query("SELECT users_id, extension
 		WHERE sessions.token = '$token')");
 $rew = mysqli_fetch_row($result);
 
+// Get droffs
+$result = $conn->query("SELECT image FROM droffs
+INNER JOIN users
+ON users.id = droffs.users_id
+WHERE users.username = '$user'");
+/*$ruw = mysqli_fetch_array($result, MYSQLI_NUM);
+$images = implode("", $ruw);*/
+
+while ($ruw = mysqli_fetch_array($result, MYSQLI_NUM)) {
+	$images .= implode("", $ruw) . ".";
+}
+
+$images = rtrim($images, ".");
+
 if(empty($row[0])){
 	// User does not get logged in
 	echo "fail";
@@ -45,7 +59,7 @@ if(empty($row[0])){
 	if(empty($rew[0])){
 		echo "success";
 	}else{
-		echo "success,". $rew[0] . "." . $rew[1]; // Eks. "success,2.png"
+		echo "success,". $rew[0] . "." . $rew[1] . "," . $images;
 	}
 }
 ?>

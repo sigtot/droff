@@ -1,5 +1,5 @@
 /*--------------------------------------------
-			Variabler
+			Globale Variabler
 ---------------------------------------------*/
 
 /* Elementer*/
@@ -25,7 +25,6 @@ var userNameMenu		= document.getElementById("userName");
 var tinyAvatar			= document.getElementById("tinyAvatar");
 var userMenu 			= document.getElementById("userMenu");
 var notDropDown			= document.getElementById("notDropDown");
-var menuFriends			= document.getElementById("menuFriends");
 var menuDroffs			= document.getElementById("menuDroffs");
 var menuSettings		= document.getElementById("menuSettings");
 var menuLogout			= document.getElementById("menuLogout");
@@ -44,6 +43,10 @@ var anarchyIcon 		= document.getElementById("anarchy");
 var fileInput 			= document.getElementById("fileInput");
 var settingsAvatar 		= document.getElementById("settingsAvatar");
 var loading 			= document.getElementById("loading");
+var droffs 				= document.getElementById("droffs");
+var bigImg				= document.getElementById("bigImg");
+var black				= document.getElementById("black");
+var deleteIcon			= document.getElementById("deleteIcon");
 
 var deleteAccountButton = document.getElementById("deleteButton");
 var deleteAccountDiv	= document.getElementById("deleteAccount");
@@ -63,9 +66,9 @@ var changeEmail			= document.getElementById("changeEmail");
 var partnerName 		= document.getElementById("partnerName");
 var partnerImg			= document.getElementById("partnerImg");
 var downloadButton		= document.getElementById("downloadButton");
-var addFriend 			= document.getElementById("addFriend");
+var uploadToCloudButton = document.getElementById("uploadToCloud");
 
-/* Arrayer */
+/* Arrays */
 var colors = [
 	"#000000", "#212121", "#616161", 
 	"#BDBDBD", "#F5F5F5", "#FFFFFF",
@@ -87,7 +90,7 @@ var badUser, badEmail;
 /* Tall og verdier */
 
 var loggedInUser = "Not logged in";
-var currentFirebase = "p";
+var currentFirebase = "p"; // p for placeholder :) :D ;)
 
 /* Andre variabler */
 
@@ -98,11 +101,13 @@ var drawRef = ref.child("p");
 ---------------------------------------------*/
 
 // Tilfeldig tall mellom min, max
+// Hvorfor er ikke dette innebygd? :(
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Validere emails
+// Validerer kun regex
 function validateEmail(email) {
 	var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 	return re.test(email);
@@ -162,6 +167,12 @@ function resumeSession(){
 				settingsAvatar.src 	= "img/avatar/" + msgSplit[1];
 				tinyAvatar.src 		= "img/avatar/" + msgSplit[1];
 			}
+			if(msgSplit[2]){
+				var images = msgSplit[2].split(".");
+				for (var i = 0; i < images.length; i++) {
+					appendDroff(images[i]);
+				};
+			}
 		}else{
 			// User is not logged in
 			if(msg == "fail"){
@@ -175,7 +186,6 @@ function resumeSession(){
 		// No current session
 	}
 }
-
 
 // Lag fargeelementene
 function makeColors(){
@@ -201,6 +211,20 @@ function checkUserName(){
 	}
 }
 
+// Slett element by id
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+
+// Slett element by class
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = 0, len = this.length; i < len; i++) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+
 // Kjører når alt loader
 window.onload = makeColors(), setColors(), resumeSession(), checkUrl(), checkUserName();
 
@@ -208,7 +232,7 @@ window.onload = makeColors(), setColors(), resumeSession(), checkUrl(), checkUse
 				Funksjonalitet
 ---------------------------------------------*/
 
-// Jquery :D
+// Finner classname for klikket div
 $("div").click(function() {
 	var clickedClass = $(this).attr("class");
 	if(clickedClass == "settingButton"){
@@ -225,6 +249,21 @@ $("div").click(function() {
 		};
 	}
 });
+
+// Finner classname for klikket img
+$("img").load(function(){ // Bildene må loades før de kan klikkes
+	$("img").mouseup(function() {
+		var imgClass = $(this).attr("class");
+		if(imgClass == "droffImg"){
+			imgSrc = $(this).attr("src");
+			$(this).attr("id","selected");
+			bigImg.src = imgSrc;
+			showBigImg();
+		}
+	});
+});
+
+
 
 // Endre størrelsen på brushen
 brushSizeRange.oninput 	= brushSizeChange;
@@ -330,7 +369,7 @@ function signUp(guest){
 	    var finishedRequest = false;
 	    // Ajax kode for å sende data til databasen i real time
 
-	    if(guest){
+	    if(guest == true){
 	    	var username = "Guest-" + Math.random().toString(36).substring(7);
 		    var email = Math.random().toString(36).substring(7);
 		    var password = Math.random().toString(36).substring(7);
@@ -445,20 +484,20 @@ function enterCheck(event){
 		}
 	}
 
+	// Escape presses
 	if(event.keyCode == 27){
 		hideUserNameMenu();
+		hideBigImg();
 	}
 }
 
 // Start en session
 enterGuest.onclick = function(){
-	var guest = true;
-	signUp(guest);
+	signUp(true); // Guest er true
 }
 
 secondEnterGuest.onclick = function(){
-	var guest = true;
-	signUp(guest);
+	signUp(true); // Guest er true
 }
 function createSession(user){
 	$.ajax({
@@ -525,7 +564,12 @@ function startGame(gameMode){
 			//ref.set({msgSplit[1]});
 
 			ref.child(msgSplit[1]).set({
-				placeholder: "placeholder2"
+				"placeholder": {
+					lineX: "0",
+					lineY: "0",
+					strokeColor: "white",
+					strokeWidth: "0"
+				}
 			});
 			drawRef = new Firebase("https://droff.firebaseio.com/" + msgSplit[1]);
 			currentFirebase = msgSplit[1];
@@ -563,15 +607,21 @@ function startGame(gameMode){
 	}
 }
 
+// Sjekk etter partner hvert sekund
 setInterval(function(){ 
 	if(polling == true){
 		poll();
 	}
 }, 1000);
 
-// Poll for avaliable game
+// Poll etter partner
 function poll(){
 	var currentCookie = getCookie("sessioncookie");
+
+	if(window.location.hash != "#finding"){
+		polling = false;
+	}
+
 	if(currentCookie){
 		// There is a cookie
 		var cookieSplit = currentCookie.split(",");
@@ -591,7 +641,12 @@ function poll(){
 			//alert("Matched with gameid " + msgSplit[1]);
 			//ref.set({msgSplit[1]});
 			ref.child(msgSplit[1]).set({
-				placeholder: "placeholder"
+				placeholder: {
+					lineX: "0",
+					lineY: "0",
+					strokeColor: "white",
+					strokeWidth: "0"
+				}
 			});
 			drawRef = new Firebase("https://droff.firebaseio.com/" + msgSplit[1]);
 			window.location.hash = "#app";
@@ -948,7 +1003,7 @@ function changeEmailFunction(){
 			}).done(function( msg ) {
 			if(msg == "success"){
 				// Password has changed
-				alert("congratu-fucking-lations your email has been changed");
+				alert("Your email has been changed to " + email);
 			}else{
 				if(msg == "wrong"){
 					emailPass.className = "fancyInput error";
@@ -988,7 +1043,7 @@ function deleteUser(){
 			data: {token: token, pass: pass}
 			}).done(function( msg ) {
 			if(msg == "success"){
-				// Password has changed
+				// Brukeren har blitt slettet
 				goodBye();
 			}else{
 				if(msg == "wrong"){
@@ -1015,9 +1070,6 @@ function goodBye(){
 
 anarchyIcon.onclick = playAnarchyMode;
 function playAnarchyMode(){
-	ref.child("anarchy").set({
-		placeholder: "placeholder"
-	});
 	drawRef = new Firebase("https://droff.firebaseio.com/" + "anarchy");
 	window.location.hash = "#app";
 	
@@ -1040,12 +1092,116 @@ function downloadDroff(){
 	link.click();*/
 }
 
+uploadToCloudButton.onclick = uploadDroff;
+function uploadDroff(){
+	uploadToCloudButton.innerHTML = "Uploading...";
+	var canvas = document.getElementById("canvas");
+	var img = canvas.toDataURL("image/png");
+
+	var code;
+
+	// Get cookie
+	var currentCookie = getCookie("sessioncookie");
+	var cookieSplit = currentCookie.split(",");
+	var token = cookieSplit[1];
+
+	// Bruker XMLHttpRequest fordi JQuery ikke 
+	// kan sende svært lange base64 strings
+	var ajax = new XMLHttpRequest();
+
+	/* Per w3schools om readystates:
+
+	State  Description
+	0      The request is not initialized
+	1      The request has been set up
+	2      The request has been sent
+	3      The request is in process
+	4      The request is complete
+
+	*/
+
+	// Jeg vil derfor bruke readystate 4 her
+	// xml requestet er ferdig
+	ajax.onreadystatechange = function(){
+		if(ajax.readyState == 4){
+			var msg = ajax.responseText;
+			code = msg;
+		}
+	}
+
+	ajax.open("POST",'uploaddroff.php',false);
+	ajax.setRequestHeader('Content-Type', 'application/upload');
+	ajax.send(img);
+
+	$.ajax({
+		type: "POST",
+		url: "droffindb.php",
+		data: {code: code, token: token}
+		}).done(function( msg ) {
+		uploadToCloudButton.innerHTML = "Save to cloud";
+	});
+}
+
+function appendDroff(code){
+	var img = document.createElement("img");
+	img.src = "img/droffs/" + code + ".png";
+	img.className = "droffImg";
+
+	droffs.appendChild(img);
+}
+
+black.onclick = hideBigImg;
+function hideBigImg(){
+	bigImg.className = "";
+	black.className = "";
+	deleteIcon.className = "";
+	if(document.getElementById("selected")){
+		document.getElementById("selected").id = "";
+	};
+}
+
+function showBigImg(){
+	black.className = "visible";
+	deleteIcon.className = "visible";
+
+	// Timeout hack
+	// Hvis vi endrer src og visibility samtidig
+	// kan ikke visibility ha transition.
+	// Vi fikser dette med en 0-sekunders timeout
+	setTimeout(function(){ bigImg.className = "visible"; }, 0);
+
+}
+
+deleteIcon.onclick = deleteDroff;
+function deleteDroff(){
+	var currentImg = bigImg.src;
+	var imgSplit = currentImg.split("/").pop();
+	var code = imgSplit.replace(".png", "");
+	
+	$.ajax({
+		type: "POST",
+		url: "deletedroff.php",
+		data: {code: code}
+		}).done(function( msg ) {
+		if(msg == "success"){
+			// Image was deleted
+			document.getElementById("selected").remove();
+			hideBigImg();
+		}else{
+			if(msg == "fail"){
+				alert("I guess you're stuck with that");
+			}
+			alert(msg);
+		}
+	});
+}
+
 /*passwordReset.onclick = resetPassword;
 function resetPassword(){
 
 }*/
 
-addFriend.onclick = sendFriendRequest;
+/*addFriend.onclick = sendFriendRequest;
 function sendFriendRequest(){
 	var currentCookie = getCookie("sessioncookie");
 	if(currentCookie){
@@ -1074,4 +1230,4 @@ function sendFriendRequest(){
 	}else{
 		// No cookie
 	}
-}
+}*/
