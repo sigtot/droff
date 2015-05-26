@@ -4,20 +4,22 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
+	die("Connection failed: " . $conn->connect_error);
+}
 
+// Post token og filendelse
 $token = $_POST["token"];
 $extension = $_POST["extension"];
 
 $token = mysqli_real_escape_string($conn, $token);
 $extension = mysqli_real_escape_string($conn, $extension);
 
+// Sjekk at filendelsen er riktig
 if($extension == "PNG" || $extension == "JPG" || $extension == "JPEG" || $extension == "GIF" || $extension == "png" || $extension == "jpg" || $extension == "jpeg" || $extension == "gif"){
 	$rightType = true;
 }else{
@@ -27,6 +29,7 @@ if($extension == "PNG" || $extension == "JPG" || $extension == "JPEG" || $extens
 
 $size = filesize($_FILES['file']['tmp_name']);
 
+// Sjekk at filen ikke er for stor
 if($size < 5000000){
 	$rightSize = true;
 }else{
@@ -35,7 +38,7 @@ if($size < 5000000){
 }
 
 if($rightType && $rightSize){
-	// Get corresponding id for token
+	// Hent tihørende id for token
 	$result = $conn->query("SELECT id 
 		FROM users
 		INNER JOIN sessions
@@ -48,10 +51,10 @@ if($rightType && $rightSize){
 	if ( 0 < $_FILES['file']['error'] ) {
 	    echo 'Error: ' . $_FILES['file']['error'] . '<br>';
 	}else{
-	    move_uploaded_file($_FILES['file']['tmp_name'], 'img/avatar/' . $id . "." . $extension);
+	    move_uploaded_file($_FILES['file']['tmp_name'], '../img/avatar/' . $id . "." . $extension);
 	}
 
-	// Send image info to database - alternatively at another time?
+	// Send bildeinfo til db
 	$sql = "INSERT INTO avatar (extension, users_id) 
 		VALUES ('$extension', '$id') 
 		ON DUPLICATE KEY 

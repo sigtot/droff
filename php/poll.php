@@ -1,19 +1,18 @@
 <?php
-
 $servername = "localhost";
 $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 }
 
-// Post cookie contents
+// Post brukernavn fra cookie
 $user = $_POST["user"];
 
 $user = mysqli_real_escape_string($conn, $user);
@@ -46,9 +45,10 @@ $sql = "UPDATE games
 $result = $conn->query($sql);
 
 if(empty($row[0])){
-	// Keep polling
+	// Fortsett å polle
 }else{
-	// Get avatar
+	// Matched!
+	// Hent avatar
 	$result = $conn->query("SELECT users_id, extension
 	FROM avatar
 	LEFT JOIN users

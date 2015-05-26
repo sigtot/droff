@@ -4,12 +4,12 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 }
 
 // Post token og code

@@ -4,22 +4,22 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
-} 
+}
 
-// Post users credentials
+// Post passord og token
 $pass = $_POST["pass"];
 $token = $_POST["token"];
 
 $pass = mysqli_real_escape_string($conn, $pass);
 $token = mysqli_real_escape_string($conn, $token);
 
-// Get corresponding password for token
+// Hent tilhørende passord for token
 $result = $conn->query("SELECT users.password, users.username
 	FROM users
 	INNER JOIN sessions
@@ -27,55 +27,45 @@ $result = $conn->query("SELECT users.password, users.username
 	WHERE sessions.token = '$token'");
 $row = mysqli_fetch_row($result);
 
-// Verify password matches
+// Sjekk at passord matcher
 $passDB = $row[0];
 $user = $row[1];
 
 if (password_verify($pass, $passDB)) {
-	// Password matches
+	// Passord matcher
 
-	// Delete avatar
+	// Disse tabellene har ikke ON DELETE CASCADE constraint
+	// Derfor må jeg slette alle rader for brukeren før jeg sletter brukeren
+
+	// Slett avatar
 	$sql = "DELETE avatar FROM avatar 
 	INNER JOIN users
 	ON users.id = avatar.users_id
 	WHERE users.username = '$user'";
 	$result = $conn->query($sql);
 
-	// Delete any current og polling games
+	// Slett eventuelle kjørene eller polling spill
 	$sql = "DELETE games FROM games 
 	INNER JOIN users
 	ON users.id = games.users_id
 	WHERE users.username = '$user'";
 	$result = $conn->query($sql);
 
-	// Delete all sessions
+	// Slett alle sessions
 	$sql = "DELETE FROM sessions
 	WHERE users_username = '$user'";
 	$result = $conn->query($sql);
 
-	// Finally, delete the user
+	// Til slutt, slett brukeren
 	$sql = "DELETE FROM users
 	WHERE username = '$user'";
 	$result = $conn->query($sql);
 
 	// Burde laget constraints :/
 
-/*
-	DELETE games FROM games 
-	INNER JOIN users
-	ON users.id = games.users_id
-	WHERE users.username = '$user';
-
-	DELETE FROM sessions
-	WHERE token = '$token';
-
-	DELETE FROM users
-	WHERE username = '$user';";
-*/
 	echo "success";
 } else {
-	// Password is wrong
+	// Passord er feil
 	echo "wrong";
 }
-
 ?>

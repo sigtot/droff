@@ -1,20 +1,19 @@
 <?php
-
 $servername = "localhost";
 $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 }
 
-// Post variables
-$gamemode = $_POST["gamemode"];
+// Post variabler
+$gamemode = $_POST["gamemode"]; // Denne variablen kan brukes om jeg vil utvide til flere gamemodes
 $user = $_POST["user"];
 
 $gamemode = mysqli_real_escape_string($conn, $gamemode);
@@ -49,11 +48,6 @@ if(empty($ledigid)){
 
 	// Lager ny gameid
 	
-	// Game id inkrementerer
-	//$result = $conn->query("SELECT MAX(gameid) FROM games");
-	//$row = mysqli_fetch_row($result);
-	//$newgameid = $row[0] + 1;
-
 	// Game id er random
 	$newgameid = rand(10000,99999);
 

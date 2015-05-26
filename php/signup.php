@@ -4,19 +4,22 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Get last ID
+// Sjekk tilkobling
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
+
+// Tabellen har ikke AUTO_INCREMENT
+// Inkrementerer insteden i php
+
+// Hent forige ID
 $result = $conn->query("SELECT MAX(id) FROM users");
 $row = mysqli_fetch_row($result);
 
-// Check connection - does nothing at the moment, i think
-if ($conn->connect_error) {
-    die("Could not establish a connection to the database" . $conn->connect_error);
-}
-
-// Post users credentials
+// Post bruker credentials
 $user = $_POST["username"];
 $pass = $_POST["password"];
 $email = $_POST["email"];
@@ -69,13 +72,4 @@ if($userTaken == false && $emailTaken == false){
 	// Error
 	echo "fail";
 }
-
-/*if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo $row["id"]. " - Name: " . $row["name"]. " - Length in seconds: " . $row["length"]. "<br>";
-    }
-} else {
-    echo "0 results";
-}*/
 ?>

@@ -1,14 +1,14 @@
-// Define the canvas element
+// Definer canvas elementet
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var cursor = document.getElementById("cursor");
 
-// Define initial settings
+// Definer grunninstillinger
 var bgColor = "#fff";
 var strokeColor = "black";
 var strokeWidth = 5;
 
-// Other variables
+// Andre variabler
 var w = canvas.width;
 var h = canvas.height;
 var mouseIsDown = false;
@@ -16,44 +16,32 @@ var mouseIsOut = true;
 var xCor = [];
 var yCor = [];
 
-// Set initial settings
+// Set grunninstillingene
 context.fillStyle = bgColor;
 context.strokeStyle = strokeColor;
 context.lineWidth = strokeWidth;
 context.lineJoin = "round";
 context.lineCap = "round";
 
-context.fillRect(0,0,w,h); // Draw the background
-context.fillStyle = strokeColor; // Set the fill to the same color as the stroke
-
-// Writing to Firebase
-
-
-// Setting initial conditions
-
-
-/*ref.set({
-      drawing3: {
-
-      }
-});*/
+context.fillRect(0,0,w,h); // Tegn bakgrunnen
+context.fillStyle = strokeColor; // Set fill til samme farge som stroke
 
 canvas.onmousedown = function(event){
-      //Starts drawing
-      xCor = []; // Reset the xCor array
-      yCor = []; // Reset the yCor array
+      // Begynner å tegne
+      xCor = []; // Tilbakestill xCor arrayen
+      yCor = []; // Tilbakestill yCor arrayen
       draw(event);
       mouseIsDown = true;
 }
 canvas.onmouseup = function(event){
-      // Stops drawing
+      // Slutter å tegne
       if(mouseIsDown) mouseClick(event);
       mouseIsDown = false;
       drawRef.push({
-                  strokeWidth: strokeWidth,
-                  strokeColor: strokeColor,
-                  lineX: xCor,
-                  lineY: yCor
+            strokeWidth: strokeWidth,
+            strokeColor: strokeColor,
+            lineX: xCor,
+            lineY: yCor
       });
 }
 
@@ -64,7 +52,7 @@ window.onmouseup = function(event){
 }
 
 canvas.onmousemove = function(event){
-      // Adds the new coordinate to the line array and redraws the line
+      // Legger til punktet i linjearrayen og tegner linja på nytt
       moveCursor(event);
       if(!mouseIsDown) return;
       draw(event);
@@ -72,8 +60,8 @@ canvas.onmousemove = function(event){
 }
 
 canvas.onmouseout = function(event){
-      // Executed when mouse leaves canvas
-      // Stops drawing when mouse leaves canvas
+      // Kjører når cursor går utenfor canvas
+      // Slutt å tegne når cursor er utenfor canvas
       if(mouseIsDown){
             draw(event);
             drawRef.push({
@@ -88,12 +76,13 @@ canvas.onmouseout = function(event){
 }
 
 canvas.onmouseenter = function(event){
+	// Kjører når cursor er over canvas
       mouseIsOut = false;
-      toggleCursor();
+      toggleCursor(); // Vis cursor
 }
 
 function draw(event){
-	// Get coordinates and add it to the line array
+	// Hent koordinater og legg til i linje arrayen
 	var x = event.x;
 	var y = event.y;
 	x -= canvas.offsetLeft;
@@ -101,7 +90,7 @@ function draw(event){
 	xCor.push(x);
 	yCor.push(y);
 
-	// Draw the line
+	// Tegn linja
 	context.beginPath();
 	for (var i = 0; i < xCor.length; i++) {
 		if(i >= 1){
@@ -113,7 +102,7 @@ function draw(event){
 		}	
 	};
 
-	// Update settings and stroke
+	// Oppdater settings og stroke
 	context.lineWidth = strokeWidth;
 	context.strokeStyle = strokeColor;
 	context.stroke();
@@ -124,8 +113,8 @@ function draw(event){
 }
 
 function mouseClick(event){
-      // Executed when mouse is released inside canvas
-      // Get coordinates
+      // Kjører når musen slippes inne i canvas
+      // Hent koordinater
       if(xCor.length <= 1){
             var x = event.x;
             var y = event.y;
@@ -136,11 +125,13 @@ function mouseClick(event){
       }
 }
 
+// Flytt cursor
 function moveCursor(event){
       cursor.style.left = event.x + 2 + "px";
       cursor.style.top = event.y + 2 + "px";
 }
 
+// Skru cursor av eller på
 function toggleCursor(){
       if(mouseIsOut){
             cursor.style.display = "none";
@@ -149,6 +140,7 @@ function toggleCursor(){
       }
 }
 
+// Hør etter nye children i firebase
 drawRef.on("child_added", function(snapshot) {
       var message = snapshot.val();
       context.beginPath();
@@ -160,8 +152,6 @@ drawRef.on("child_added", function(snapshot) {
             }else{
                  context.arc(message.lineX, message.lineY, 1, 0, 2 * Math.PI);
             }  
-            //console.log(message.lineX[i]);
-            //console.log(message.lineY[i]);
       };
       context.lineWidth = message.strokeWidth;
       context.strokeStyle = message.strokeColor;

@@ -147,16 +147,16 @@ function addJsFile(filename){
 function resumeSession(){
 	var currentCookie = getCookie("sessioncookie");
 	if(currentCookie){
-		// There is a cookie
+		// Det er en cookie
 		var cookieSplit = currentCookie.split(",");
 
 		var user = cookieSplit[0];
 		var token = cookieSplit[1];
 
-		// Check if the cookie has a corresponding session
+		// Sjekk om cookie har tilhørende session i db
 		$.ajax({
 		type: "POST",
-		url: "resumesession.php",
+		url: "php/resumesession.php",
 		data: { username: user, token: token}
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
@@ -174,7 +174,7 @@ function resumeSession(){
 				};
 			}
 		}else{
-			// User is not logged in
+			// Brukeren er ikke logget inn
 			if(msg == "fail"){
 				logOut();
 			}else{
@@ -183,7 +183,7 @@ function resumeSession(){
 		});
 
 	}else{
-		// No current session
+		// Ingen session
 	}
 }
 
@@ -301,7 +301,7 @@ function checkSignUpFields(){
         signUpUserReady = false;
     }
 
-    // Email gyldig
+    // Email er gyldig
 	if(validateEmail(signUpEmail.value)){
 		signUpEmailReady = true;
     }else{
@@ -382,7 +382,7 @@ function signUp(guest){
 
 	    $.ajax({
 	        type: "POST",
-	        url: "signup.php",
+	        url: "php/signup.php",
 	        data: { username: username, email: email, password: password}
 	        }).done(function( msg ) {
 	        if(msg == "success"){
@@ -436,10 +436,9 @@ function login(){
 	if(loginUserReady && loginPassReady){
 		loginSubmit.innerHTML = "Logging in...";
 
-		// Ajax code to send data to database instantly
 		$.ajax({
 			type: "POST",
-			url: "login.php",
+			url: "php/login.php",
 			data: { username: loginUser.value, password: loginPass.value }
 			}).done(function( msg ) {
 			var msgSplit = msg.split(",");
@@ -450,6 +449,13 @@ function login(){
 				if(msgSplit[2]){
 					settingsAvatar.src 	= "img/avatar/" + msgSplit[2];
 					tinyAvatar.src 		= "img/avatar/" + msgSplit[2];
+				}
+
+				if(msgSplit[3]){
+					var images = msgSplit[3].split(".");
+					for (var i = 0; i < images.length; i++) {
+						appendDroff(images[i]);
+					};
 				}
 
 				loginPage();
@@ -502,7 +508,7 @@ secondEnterGuest.onclick = function(){
 function createSession(user){
 	$.ajax({
 		type: "POST",
-		url: "createsession.php",
+		url: "php/createsession.php",
 		data: { username: user }
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
@@ -513,13 +519,13 @@ function createSession(user){
 			time += 200000 * 3600 * 1000;
 			now.setTime(time);
 
-			// Create the cookie
+			// Lag cookie
 			document.cookie = 
 			'sessioncookie=' + user + "," + msgSplit[1] + 
 			'; expires=' + now.toUTCString() + 
 			'; path=/';
 
-			// Throw login page
+			// Vis login page
 			loginPage();
 		}else{
 			if(msg == "fail"){
@@ -527,16 +533,10 @@ function createSession(user){
 			}else{
 			}
 		}
-		/*// Fjern metadata etter semicolon
-		var cookieValue = document.cookie.split(";");
-
-		// Del opp cookie i user og token
-		var cookieSplit = cookieValue[0].split(",");
-		alert(cookieSplit[0] + " " + cookieSplit[1]);*/
 	});
 }
 
-// Add to matchmaking queue
+// Legg til i matchmaking (games tabell)
 strangerIcon.onclick = function(){
 	startGame("duo");
 }
@@ -544,25 +544,21 @@ strangerIcon.onclick = function(){
 function startGame(gameMode){
 	var currentCookie = getCookie("sessioncookie");
 	if(currentCookie){
-		// There is a cookie
+		// Det er en cookie
 		var cookieSplit = currentCookie.split(",");
 
 		var user = cookieSplit[0];
 		var token = cookieSplit[1];
 
-		// Check if the cookie has a corresponding session
+		// Sjekk om cookie har tilhørende session i db
 		$.ajax({
 		type: "POST",
-		url: "startgame.php",
+		url: "php/startgame.php",
 		data: {token: token, gamemode: gameMode, user: user}
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
 		if(msgSplit[0] == "success"){
-			// There is a session - game starts right away
-			//alert("gameid is " + msgSplit[1]);
-
-			//ref.set({msgSplit[1]});
-
+			// Det finnes en søker - spillet starter med en gang
 			ref.child(msgSplit[1]).set({
 				"placeholder": {
 					lineX: "0",
@@ -575,11 +571,11 @@ function startGame(gameMode){
 			currentFirebase = msgSplit[1];
 			window.location.hash = "#app";
 
-			// Display the partner's username
+			// Vis partnerens navn
 			partnerName.innerHTML = msgSplit[2];
 
-			// And the avatar
-			// Avatar extension
+			// Og avatar
+			// Filendelse
 			var avatarSplit = msgSplit[3].split(".");
 			var aX = avatarSplit[avatarSplit.length - 1];
 			
@@ -589,10 +585,10 @@ function startGame(gameMode){
 				partnerImg.src = "img/icons/avatar.png";
 			}
 
-			// Add draw.js
+			// Legg til draw.js
 			addJsFile("draw.js");
 		}else{
-			// There is no session - has to poll for another player
+			// Ingen søker - må polle for en partner
 			if(msg == "poll"){
 				window.location.hash = "#finding";
 				poll();
@@ -603,7 +599,7 @@ function startGame(gameMode){
 		});
 
 	}else{
-		// No current session
+		// Ingen session
 	}
 }
 
@@ -623,23 +619,21 @@ function poll(){
 	}
 
 	if(currentCookie){
-		// There is a cookie
+		// Det er en cookie
 		var cookieSplit = currentCookie.split(",");
 
 		var user = cookieSplit[0];
 		var token = cookieSplit[1];
 
-		// Check if the cookie has a corresponding session
+		// Sjekk om noen andre søker
 		$.ajax({
 		type: "POST",
-		url: "poll.php",
+		url: "php/poll.php",
 		data: {user: user}
 		}).done(function( msg ) {
 		var msgSplit = msg.split(",");
 		if(msgSplit[0] == "matched"){
 			// Matched!
-			//alert("Matched with gameid " + msgSplit[1]);
-			//ref.set({msgSplit[1]});
 			ref.child(msgSplit[1]).set({
 				placeholder: {
 					lineX: "0",
@@ -652,12 +646,11 @@ function poll(){
 			window.location.hash = "#app";
 			polling = false;
 
-			// Display the partner's username
+			// Vis partnerens brukernavn
 			partnerName.innerHTML = msgSplit[2];
 
-			// And the avatar
-
-			// Avatar extension
+			// Og avataren
+			// Filendelse
 			var avatarSplit = msgSplit[3].split(".");
 			var aX = avatarSplit[avatarSplit.length - 1];
 			
@@ -667,10 +660,10 @@ function poll(){
 				partnerImg.src = "img/icons/avatar.png";
 			}
 
-			// Add draw.js
+			// Legg til draw.js
 			addJsFile("draw.js");
 		}else{
-			// Still waiting
+			// Fortsett å vent
 			if(msg == "fail"){
 				alert("waiting");
 			}else{
@@ -679,17 +672,14 @@ function poll(){
 		});
 
 	}else{
-		// No current session
+		// Ingen session
 	}
 }
 
 
-// There is a user logged in
+// Brukeren er logget inn
 function loginPage(){
-	//loginContainer.style.top = "-600px";
-	//orGuest.style.top = "-200px";
-
-	// Get the current logged in username
+	// Hent brukernavn fra cookie
 	var currentCookie = getCookie("sessioncookie");
 	loggedInUser = currentCookie.split(",")[0];
 
@@ -699,10 +689,10 @@ function loginPage(){
 	checkUserName();
 }
 
-// Change page
+// Bytt side
 window.onhashchange = checkUrl;
 function checkUrl(){
-	// Reset elements
+	// Reset elementer
 	app.style.opacity = "0";
 	app.style.pointerEvents = "none";
 
@@ -715,11 +705,11 @@ function checkUrl(){
 	finding.style.opacity = "0";
 	finding.style.pointerEvents = "none";
 
-	// Show element
+	// Vis element
 	if(window.location.hash == "#app"){
 		app.style.display = "block";
-		// The display isn't animatable thus needs to trigger before the fading
-		// A 0-time timeout fixes this
+		// Display attributten er ikke animerbar og må derfor trigges før eventuelle animasjoner
+		// En timeout på 0 sekunder fikser dette
 		setTimeout(function(){ noDisplay(app); }, 0);
 	}
 
@@ -727,7 +717,7 @@ function checkUrl(){
 		user.style.display = "block";
 		setTimeout(function(){ noDisplay(user); }, 0);
 	}
-	// Also show splash if there's no hash
+	// Hvis det ikke er hash, eller hashet ikke passer, vis splash
 	if(window.location.hash == "#splash" || window.location.hash == ""){
 		splash.style.display = "block";
 		setTimeout(function(){ noDisplay(splash); }, 0);
@@ -740,7 +730,7 @@ function checkUrl(){
 }
 
 function noDisplay(element){
-	// Dont show unless true
+	// Ikke vis med mindre true
 	if(element.id != "appE"){
 		app.style.display = "none";
 	}else{
@@ -748,7 +738,7 @@ function noDisplay(element){
 		app.style.pointerEvents = "all";
 	}
 
-	// Dont show unless true
+	// Ikke vis med mindre true
 	if(element.id != "userE"){
 		user.style.display = "none";
 	}else{
@@ -756,7 +746,7 @@ function noDisplay(element){
 		user.style.pointerEvents = "all";
 	}
 
-	// Dont show unless true
+	// Ikke vis med mindre true
 	if(element.id != "splashE"){
 		splash.style.display = "none";
 	}else{
@@ -764,7 +754,7 @@ function noDisplay(element){
 		splash.style.pointerEvents = "all";
 	}
 
-	// Dont show unless true
+	// Ikke vis med mindre true
 	if(element.id != "findingE"){
 		finding.style.display = "none";
 	}else{
@@ -781,7 +771,6 @@ toggleUserNameMenu = function(){
 		userMenu.className = "dropDown box visible";
 		notDropDown.className = "visible";
 	}
-	//userMenu.className = "visible dropDown box";
 }
 userNameContainer.onclick = toggleUserNameMenu;
 notDropDown.onclick = toggleUserNameMenu;
@@ -804,7 +793,7 @@ function logOut(){
 		// Fjern cookie fra DB
 		$.ajax({
 			type: "POST",
-			url: "destroysession.php",
+			url: "php/destroysession.php",
 			data: {token: token} // Variable token sendes med navn "token" til php
 			}).done(function( msg ) {
 			// Done! Session finnes ikke lengre
@@ -840,7 +829,7 @@ function imageUpload(){
 		form_data.append("token", token);
 		form_data.append("extension", extension);
 		$.ajax({
-			url: "upload.php",
+			url: "php/upload.php",
 			dataType: "text",
 			cache: false,
 			contentType: false,
@@ -866,22 +855,6 @@ function imageUpload(){
 			}
 		});
 	}
-	
-
-	/*$.ajax({
-		type: "POST",
-		url: "upload.php",
-		data: { token: token, name: fileInput.value} // Filen sendes til php
-		}).done(function( msg ) {
-		// Done! Session finnes ikke lengre
-		
-		if(msg == "uploaded"){
-			alert("wow good");
-		}else{
-			alert(msg)
-		}
-		
-	});*/
 }
 
 deleteAccountButton.onclick = showDeleteForm;
@@ -959,27 +932,27 @@ function changePassword(){
 		var oldpass = oldPass.value;
 		var token = cookieSplit[1];
 
-		// Check if the old password is correct and the token has a corresponding session
+		// Sjekk om det gamle passordet er riktig og token har en tihørende session
 		$.ajax({
 		type: "POST",
-		url: "changepassword.php",
+		url: "php/changepassword.php",
 		data: {newpass: newpass, oldpass: oldpass, token: token}
 		}).done(function( msg ) {
 		if(msg == "success"){
-			// Password has changed
-			alert("congratu-fucking-lations your password has been changed");
+			// Passordet har blitt byttet
+			alert("Your password has been changed");
 		}else{
 			if(msg == "wrong"){
 				oldPass.className = "fancyInput error";
 			}else{
-				// It failed
+				// Error
 				alert("something went wrong");
 			}
 		}
 		changePass.innerHTML = "Change password";
 		});
 	}else{
-		// No cookie
+		// Ingen cookie
 	}
 }
 
@@ -998,21 +971,21 @@ function changeEmailFunction(){
 		
 		$.ajax({
 			type: "POST",
-			url: "changeemail.php",
+			url: "php/changeemail.php",
 			data: {token: token, pass: pass, email: email}
 			}).done(function( msg ) {
 			if(msg == "success"){
-				// Password has changed
+				// Emailen har blitt endret
 				alert("Your email has been changed to " + email);
 			}else{
 				if(msg == "wrong"){
 					emailPass.className = "fancyInput error";
 				}else{
 					if(msg == "taken"){
-						// Email is taken
+						// Emailen er tatt
 						newEmail.className = "fancyInput error";
 					}else{
-						// It failed
+						// Error
 						alert("something went wrong");
 					}
 				}
@@ -1020,11 +993,10 @@ function changeEmailFunction(){
 			changeEmail.innerHTML = "Change email";
 		});
 	}else{
-		// No cookie
+		// Ingen cookie
 	}
 }
 
-//confirmDelete.onclick = deleteUser;
 confirmDelete.onclick = deleteUser;
 function deleteUser(){
 	var currentCookie = getCookie("sessioncookie");
@@ -1039,7 +1011,7 @@ function deleteUser(){
 		
 		$.ajax({
 			type: "POST",
-			url: "deleteuser.php",
+			url: "php/deleteuser.php",
 			data: {token: token, pass: pass}
 			}).done(function( msg ) {
 			if(msg == "success"){
@@ -1049,14 +1021,14 @@ function deleteUser(){
 				if(msg == "wrong"){
 					deletePass.className = "fancyInput error";
 				}else{
-					// It failed
+					// Error
 					alert("something went wrong");
 				}
 			}
 			confirmDelete.innerHTML = "Delete";
 		});
 	}else{
-		// No cookie
+		// Ingen cookie
 	}
 }
 
@@ -1075,7 +1047,7 @@ function playAnarchyMode(){
 	
 	document.getElementById("partnerContainer").style.display = "none";
 
-	// Add draw.js
+	// Legg til draw.js
 	addJsFile("draw.js");
 }
 
@@ -1084,12 +1056,6 @@ function downloadDroff(){
 	var canvas = document.getElementById("canvas");
 	var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 	window.location.href=img;
-
-	/*var link = document.createElement('a');
-	link.href = img;
-	link.download = img;
-	document.body.appendChild(link);
-	link.click();*/
 }
 
 uploadToCloudButton.onclick = uploadDroff;
@@ -1100,7 +1066,7 @@ function uploadDroff(){
 
 	var code;
 
-	// Get cookie
+	// Hent cookie
 	var currentCookie = getCookie("sessioncookie");
 	var cookieSplit = currentCookie.split(",");
 	var token = cookieSplit[1];
@@ -1129,13 +1095,13 @@ function uploadDroff(){
 		}
 	}
 
-	ajax.open("POST",'uploaddroff.php',false);
+	ajax.open("POST",'php/uploaddroff.php',false);
 	ajax.setRequestHeader('Content-Type', 'application/upload');
 	ajax.send(img);
 
 	$.ajax({
 		type: "POST",
-		url: "droffindb.php",
+		url: "php/droffindb.php",
 		data: {code: code, token: token}
 		}).done(function( msg ) {
 		uploadToCloudButton.innerHTML = "Save to cloud";
@@ -1180,7 +1146,7 @@ function deleteDroff(){
 	
 	$.ajax({
 		type: "POST",
-		url: "deletedroff.php",
+		url: "php/deletedroff.php",
 		data: {code: code}
 		}).done(function( msg ) {
 		if(msg == "success"){
@@ -1189,45 +1155,9 @@ function deleteDroff(){
 			hideBigImg();
 		}else{
 			if(msg == "fail"){
-				alert("I guess you're stuck with that");
+				alert("I guess you'll have to keep it");
 			}
 			alert(msg);
 		}
 	});
 }
-
-/*passwordReset.onclick = resetPassword;
-function resetPassword(){
-
-}*/
-
-/*addFriend.onclick = sendFriendRequest;
-function sendFriendRequest(){
-	var currentCookie = getCookie("sessioncookie");
-	if(currentCookie){
-		// Cookie finnes
-		var cookieSplit = currentCookie.split(",");
-
-		confirmDelete.innerHTML = "Deleting...";
-
-		var user = cookieSplit[0];
-
-		var friend = partnerName.innerHTML;
-		
-		$.ajax({
-			type: "POST",
-			url: "friendrequest.php",
-			data: {user: user, friend: friend}
-			}).done(function( msg ) {
-			if(msg == "success"){
-				// Password has changed
-				alert(msg);
-			}else{
-				// It failed
-				alert(msg);
-			}
-		});
-	}else{
-		// No cookie
-	}
-}*/

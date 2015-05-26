@@ -4,13 +4,13 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Sjekk tilkobling
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
-} 
+}
 
 // Post users credentials
 $oldpass = $_POST["oldpass"];
@@ -21,7 +21,7 @@ $oldpass = mysqli_real_escape_string($conn, $oldpass);
 $newpass = mysqli_real_escape_string($conn, $newpass);
 $token = mysqli_real_escape_string($conn, $token);
 
-// Get corresponding password for token
+// Hent tilhørende passord for token
 $result = $conn->query("SELECT users.password
 	FROM users
 	INNER JOIN sessions
@@ -29,12 +29,11 @@ $result = $conn->query("SELECT users.password
 	WHERE sessions.token = '$token'");
 $row = mysqli_fetch_row($result);
 
-// Verify password matches
 $passDB = $row[0];
 
-
+// Sjekk at passord matcher
 if (password_verify($oldpass, $passDB)) {
-	// Password matches
+	// Passord matcher
 	$options = [
 		"cost" => 11,
 	];
@@ -48,7 +47,7 @@ if (password_verify($oldpass, $passDB)) {
 	$result = $conn->query($sql);
 	echo "success";
 } else {
-	// Password is wrong
+	// Passord er feil
 	echo "wrong";
 }
 

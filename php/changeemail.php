@@ -4,10 +4,10 @@ $username = "siguojbt_admin";
 $password = "vg44feffx58h19xm9r";
 $dbname = "siguojbt_database1";
 
-// Create connection
+// Lag tilkobling
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection - does nothing at the moment, i think
+// Test tilkoblingen
 if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 } 
@@ -21,7 +21,7 @@ $pass = mysqli_real_escape_string($conn, $pass);
 $email = mysqli_real_escape_string($conn, $email);
 $token = mysqli_real_escape_string($conn, $token);
 
-// Get corresponding password for token
+// Hent tilhørende passord for token
 $result = $conn->query("SELECT users.password
 	FROM users
 	INNER JOIN sessions
@@ -29,10 +29,9 @@ $result = $conn->query("SELECT users.password
 	WHERE sessions.token = '$token'");
 $row = mysqli_fetch_row($result);
 
-// Verify password matches
 $passDB = $row[0];
 
-// Check if email is unique
+// Sjekk om email er unik
 $result = $conn->query("SELECT email FROM users WHERE email = '$email'");
 $row = mysqli_fetch_row($result);
 
@@ -42,8 +41,9 @@ if(empty($row[0])){
 	$uniqueemail = false;
 }
 
+// Sjekk om passord matcher
 if (password_verify($pass, $passDB) && $uniqueemail == true) {
-	// Password matches
+	// Passord matcher
 
 	$sql = "UPDATE users 
 	SET email = '$email'
@@ -52,10 +52,10 @@ if (password_verify($pass, $passDB) && $uniqueemail == true) {
 	echo "success";
 } else {
 	if($uniqueemail == false){
-		// Email is taken
+		// Email er tatt
 		echo "taken";
 	}else{
-		// Password is wrong
+		// Password er feil
 		echo "wrong";
 	}
 }
