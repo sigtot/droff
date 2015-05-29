@@ -51,11 +51,6 @@ if (password_verify($pass, $passDB)) {
 	WHERE users.username = '$user'";
 	$result = $conn->query($sql);
 
-	// Slett alle sessions
-	$sql = "DELETE FROM sessions
-	WHERE users_username = '$user'";
-	$result = $conn->query($sql);
-
 	// Til slutt, slett brukeren
 	$sql = "DELETE FROM users
 	WHERE username = '$user'";
